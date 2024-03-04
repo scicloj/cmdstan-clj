@@ -1,0 +1,9 @@
+.calva/output-window/
+.classpath
+.clj-kondo/.cache
+.cpcache
+/classes
+/target
+.clerk
+.clay.html
+temp
