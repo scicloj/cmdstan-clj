@@ -10,7 +10,7 @@
 
 ;; ## Walkthrough
 
-;; (reproducing [CmdStanR's intro](https://mc-stan.org/cmdstanr/articles/cmdstanr.html))
+;; Here we reproduce [CmdStanR's intro](https://mc-stan.org/cmdstanr/articles/cmdstanr.html). Eventually, of course, most of the details below should be generalized and transparent.
 
 (def cmdstan-path (System/getenv "CMDSTAN_PATH"))
 
