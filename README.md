@@ -9,6 +9,11 @@ Eventually, this will be a library.
 
 Currently, this is an evolving proof-of-concept.
 
+## Walkthrough
+
+[Notes (WIP)](https://scicloj.github.io/cmdstan-clj)
+
+
 ## Why
 
 Stan is a programming language for Bayesian statistical modelling with wonderful community and ecosystem.
