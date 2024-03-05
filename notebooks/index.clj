@@ -5,6 +5,8 @@
             [clojure.java.shell :as shell]
             [charred.api :as charred]
             [clojure.java.io :as io]
+            [tech.v3.dataset.print :as print]
+            [clojure.string :as str]
             [scicloj.kindly.v4.kind :as kind]))
 
 
@@ -40,5 +42,21 @@
     :out
     kind/code)
 
-(-> samples-path
-    tc/dataset)
+(def processed-samples-path "temp/bernoulli.samples.processed.csv")
+
+;; Filter out comment lines.
+(with-open [reader (io/reader samples-path)
+            writer (io/writer
+                    processed-samples-path)]
+  (loop [line (.readLine reader)]
+    (when line
+      (do (when-not
+              (.startsWith line "#")
+            (.write writer line)
+            (.write writer "\n"))
+          (recur (.readLine reader))))))
+
+
+(-> processed-samples-path
+    tc/dataset
+    (tc/set-dataset-name "model samples"))
