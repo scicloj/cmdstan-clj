@@ -108,7 +108,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>            [clojure.java.shell <span class="at">:as</span> shell]</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            [charred.api <span class="at">:as</span> charred]</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            [clojure.java.io <span class="at">:as</span> io]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            [tech.v3.dataset.<span class="kw">print</span> <span class="at">:as</span> <span class="kw">print</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            [clojure.string <span class="at">:as</span> <span class="kw">str</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="walkthrough" class="level2">
 <h2 class="anchored" data-anchor-id="walkthrough">Walkthrough</h2>
@@ -193,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> temp/bernoulli.data.json</span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>init <span class="kw">=</span> <span class="dv">2</span> (Default)</span>
 <span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>random</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">312501541</span> (Default)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">347021837</span> (Default)</span>
 <span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>output</span>
 <span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> temp/bernoulli.samples.csv</span>
 <span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  diagnostic_file <span class="kw">=</span>  (Default)</span>
@@ -204,8 +206,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>num_threads <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
 <span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">5e-06</span> seconds</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.05</span> seconds.</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">6e-06</span> seconds</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.06</span> seconds.</span>
 <span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
 <span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
@@ -233,258 +235,278 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
 <span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.009</span> seconds (Sampling)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.011</span> seconds (Total)</span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.006</span> seconds (Sampling)</span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.008</span> seconds (Total)</span>
 <span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> samples-path</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    tc/dataset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> processed-samples-path </span><span class="st">"temp/bernoulli.samples.processed.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>temp/bernoulli.samples.csv [1027 8]:</p>
+<p>Filter out comment lines.</p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb16"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">with-open</span> [reader (io/reader samples-path)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            writer (io/writer</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                    processed-samples-path)]</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">loop</span> [line (.readLine reader)]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">when</span> line</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">do</span> (<span class="kw">when-not</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>              (.startsWith line <span class="st">"#"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            (.write writer line)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>            (.write writer <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">recur</span> (.readLine reader))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="printedClojure">
+<div class="sourceCode" id="cb17"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="va">nil</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb18"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> processed-samples-path</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    tc/dataset</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    (tc/set-dataset-name <span class="st">"model samples"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>model samples [1000 8]:</p>
 <table class="table">
 <colgroup>
-<col style="width: 37%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
-<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 11%">
 </colgroup>
 <thead>
 <tr class="header">
-<th># stan_version_minor = 34</th>
-<th>column-1</th>
-<th>column-2</th>
-<th>column-3</th>
-<th>column-4</th>
-<th>column-5</th>
-<th>column-6</th>
-<th>column-7</th>
+<th style="text-align: right;">lp__</th>
+<th style="text-align: right;">accept_stat__</th>
+<th style="text-align: right;">stepsize__</th>
+<th style="text-align: right;">treedepth__</th>
+<th style="text-align: right;">n_leapfrog__</th>
+<th style="text-align: right;">divergent__</th>
+<th style="text-align: right;">energy__</th>
+<th style="text-align: right;">theta</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td># model = bernoulli_model</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-8.35085</td>
+<td style="text-align: right;">0.895713</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.35619</td>
+<td style="text-align: right;">0.0791679</td>
 </tr>
 <tr class="even">
-<td># method = sample (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.55370</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.24741</td>
+<td style="text-align: right;">0.1171890</td>
 </tr>
 <tr class="odd">
-<td># num_samples = 1000 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.25053</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.53817</td>
+<td style="text-align: right;">0.1404770</td>
 </tr>
 <tr class="even">
-<td># save_warmup = 0 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.10968</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.26934</td>
+<td style="text-align: right;">0.1548940</td>
 </tr>
 <tr class="odd">
-<td># adapt</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.36828</td>
+<td style="text-align: right;">0.984465</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.39301</td>
+<td style="text-align: right;">0.1304520</td>
 </tr>
 <tr class="even">
-<td># gamma = 0.05 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.02721</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.30936</td>
+<td style="text-align: right;">0.1651530</td>
 </tr>
 <tr class="odd">
-<td># kappa = 0.75 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.02721</td>
+<td style="text-align: right;">0.737296</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.95970</td>
+<td style="text-align: right;">0.1651530</td>
 </tr>
 <tr class="even">
-<td># init_buffer = 75 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-6.96577</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.05044</td>
+<td style="text-align: right;">0.1741220</td>
 </tr>
 <tr class="odd">
-<td># window = 25 (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-7.79978</td>
+<td style="text-align: right;">0.938588</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.90278</td>
+<td style="text-align: right;">0.4524330</td>
 </tr>
 <tr class="even">
-<td># algorithm = hmc (Default)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-8.03911</td>
+<td style="text-align: right;">0.914943</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.37788</td>
+<td style="text-align: right;">0.4756070</td>
 </tr>
 <tr class="odd">
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
-<td>…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
 </tr>
 <tr class="even">
-<td>-6.74897</td>
-<td>0.970028</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>6.96005</td>
-<td>0.255474</td>
+<td style="text-align: right;">-8.18569</td>
+<td style="text-align: right;">0.860997</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.25262</td>
+<td style="text-align: right;">0.0853588</td>
 </tr>
 <tr class="odd">
-<td>-6.96519</td>
-<td>0.969147</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>6.97745</td>
-<td>0.174214</td>
+<td style="text-align: right;">-8.18569</td>
+<td style="text-align: right;">0.908823</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">9.04813</td>
+<td style="text-align: right;">0.0853588</td>
 </tr>
 <tr class="even">
-<td>-6.9901</td>
-<td>0.998534</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>7.02534</td>
-<td>0.170404</td>
+<td style="text-align: right;">-6.98477</td>
+<td style="text-align: right;">0.992594</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.04992</td>
+<td style="text-align: right;">0.1711970</td>
 </tr>
 <tr class="odd">
-<td>-6.74971</td>
-<td>0.993217</td>
-<td>0.931578</td>
-<td>1</td>
-<td>3</td>
-<td>0</td>
-<td>7.05774</td>
-<td>0.257311</td>
+<td style="text-align: right;">-7.27203</td>
+<td style="text-align: right;">0.944476</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.27889</td>
+<td style="text-align: right;">0.1385310</td>
 </tr>
 <tr class="even">
-<td>-6.75411</td>
-<td>0.999651</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>6.75411</td>
-<td>0.263958</td>
+<td style="text-align: right;">-9.62973</td>
+<td style="text-align: right;">0.651520</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">11.02130</td>
+<td style="text-align: right;">0.5913280</td>
 </tr>
 <tr class="odd">
-<td>-6.77078</td>
-<td>0.926613</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>7.2421</td>
-<td>0.223982</td>
+<td style="text-align: right;">-7.70420</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">9.09206</td>
+<td style="text-align: right;">0.4424600</td>
 </tr>
 <tr class="even">
-<td>-7.2365</td>
-<td>0.937705</td>
-<td>0.931578</td>
-<td>2</td>
-<td>3</td>
-<td>0</td>
-<td>7.31407</td>
-<td>0.141779</td>
+<td style="text-align: right;">-6.79609</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.41275</td>
+<td style="text-align: right;">0.2900240</td>
 </tr>
 <tr class="odd">
-<td>-6.98479</td>
-<td>1</td>
-<td>0.931578</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>7.19701</td>
-<td>0.171194</td>
+<td style="text-align: right;">-6.97156</td>
+<td style="text-align: right;">0.945741</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.97303</td>
+<td style="text-align: right;">0.3390580</td>
 </tr>
 <tr class="even">
-<td>-7.03517</td>
-<td>0.991312</td>
-<td>0.931578</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>7.06697</td>
-<td>0.164085</td>
+<td style="text-align: right;">-8.37895</td>
+<td style="text-align: right;">0.566733</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10.04090</td>
+<td style="text-align: right;">0.0781774</td>
 </tr>
 <tr class="odd">
-<td># Elapsed Time: 0.002 seconds (Warm-up)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-8.66052</td>
+<td style="text-align: right;">0.971625</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.82721</td>
+<td style="text-align: right;">0.0691151</td>
 </tr>
 <tr class="even">
-<td># 0.011 seconds (Total)</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td style="text-align: right;">-8.47833</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.981437</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.85035</td>
+<td style="text-align: right;">0.0748063</td>
 </tr>
 </tbody>
 </table>

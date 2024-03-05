@@ -23,6 +23,8 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
             [clojure.java.shell :as shell]
             [charred.api :as charred]
             [clojure.java.io :as io]
+            [tech.v3.dataset.print :as print]
+            [clojure.string :as str]
             [scicloj.kindly.v4.kind :as kind]))
 ```
 :::
@@ -178,7 +180,7 @@ data
   file = temp/bernoulli.data.json
 init = 2 (Default)
 random
-  seed = 312501541 (Default)
+  seed = 347021837 (Default)
 output
   file = temp/bernoulli.samples.csv
   diagnostic_file =  (Default)
@@ -189,8 +191,8 @@ output
 num_threads = 1 (Default)
 
 
-Gradient evaluation took 5e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+Gradient evaluation took 6e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
 Adjust your expectations accordingly!
 
 
@@ -218,8 +220,8 @@ Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.009 seconds (Sampling)
-               0.011 seconds (Total)
+               0.006 seconds (Sampling)
+               0.008 seconds (Total)
 
 
 ```
@@ -229,38 +231,75 @@ Iteration: 2000 / 2000 [100%]  (Sampling)
 
 ::: {.sourceClojure}
 ```clojure
-(-> samples-path
-    tc/dataset)
+(def processed-samples-path "temp/bernoulli.samples.processed.csv")
 ```
 :::
 
 
-temp/bernoulli.samples.csv [1027 8]:
+Filter out comment lines.
 
-|                # stan_version_minor = 34 | column-1 | column-2 | column-3 | column-4 | column-5 | column-6 | column-7 |
-|------------------------------------------|----------|----------|----------|----------|----------|----------|----------|
-|                # model = bernoulli_model |          |          |          |          |          |          |          |
-|              # method = sample (Default) |          |          |          |          |          |          |          |
-|       #     num_samples = 1000 (Default) |          |          |          |          |          |          |          |
-|          #     save_warmup = 0 (Default) |          |          |          |          |          |          |          |
-|                              #     adapt |          |          |          |          |          |          |          |
-|           #       gamma = 0.05 (Default) |          |          |          |          |          |          |          |
-|           #       kappa = 0.75 (Default) |          |          |          |          |          |          |          |
-|       #       init_buffer = 75 (Default) |          |          |          |          |          |          |          |
-|            #       window = 25 (Default) |          |          |          |          |          |          |          |
-|          #     algorithm = hmc (Default) |          |          |          |          |          |          |          |
-|                                      ... |      ... |      ... |      ... |      ... |      ... |      ... |      ... |
-|                                 -6.74897 | 0.970028 | 0.931578 |        2 |        3 |        0 |  6.96005 | 0.255474 |
-|                                 -6.96519 | 0.969147 | 0.931578 |        2 |        3 |        0 |  6.97745 | 0.174214 |
-|                                  -6.9901 | 0.998534 | 0.931578 |        2 |        3 |        0 |  7.02534 | 0.170404 |
-|                                 -6.74971 | 0.993217 | 0.931578 |        1 |        3 |        0 |  7.05774 | 0.257311 |
-|                                 -6.75411 | 0.999651 | 0.931578 |        2 |        3 |        0 |  6.75411 | 0.263958 |
-|                                 -6.77078 | 0.926613 | 0.931578 |        2 |        3 |        0 |   7.2421 | 0.223982 |
-|                                  -7.2365 | 0.937705 | 0.931578 |        2 |        3 |        0 |  7.31407 | 0.141779 |
-|                                 -6.98479 |        1 | 0.931578 |        1 |        1 |        0 |  7.19701 | 0.171194 |
-|                                 -7.03517 | 0.991312 | 0.931578 |        1 |        1 |        0 |  7.06697 | 0.164085 |
-| #  Elapsed Time: 0.002 seconds (Warm-up) |          |          |          |          |          |          |          |
-|   #                0.011 seconds (Total) |          |          |          |          |          |          |          |
+
+::: {.sourceClojure}
+```clojure
+(with-open [reader (io/reader samples-path)
+            writer (io/writer
+                    processed-samples-path)]
+  (loop [line (.readLine reader)]
+    (when line
+      (do (when-not
+              (.startsWith line "#")
+            (.write writer line)
+            (.write writer "\n"))
+          (recur (.readLine reader))))))
+```
+:::
+
+
+
+::: {.printedClojure}
+```clojure
+nil
+
+```
+:::
+
+
+
+::: {.sourceClojure}
+```clojure
+(-> processed-samples-path
+    tc/dataset
+    (tc/set-dataset-name "model samples"))
+```
+:::
+
+
+model samples [1000 8]:
+
+|     lp__ | accept_stat__ | stepsize__ | treedepth__ | n_leapfrog__ | divergent__ | energy__ |     theta |
+|---------:|--------------:|-----------:|------------:|-------------:|------------:|---------:|----------:|
+| -8.35085 |      0.895713 |   0.981437 |           1 |            1 |           0 |  8.35619 | 0.0791679 |
+| -7.55370 |      1.000000 |   0.981437 |           1 |            1 |           0 |  8.24741 | 0.1171890 |
+| -7.25053 |      1.000000 |   0.981437 |           1 |            1 |           0 |  7.53817 | 0.1404770 |
+| -7.10968 |      1.000000 |   0.981437 |           1 |            1 |           0 |  7.26934 | 0.1548940 |
+| -7.36828 |      0.984465 |   0.981437 |           2 |            3 |           0 |  7.39301 | 0.1304520 |
+| -7.02721 |      1.000000 |   0.981437 |           1 |            1 |           0 |  7.30936 | 0.1651530 |
+| -7.02721 |      0.737296 |   0.981437 |           1 |            3 |           0 |  8.95970 | 0.1651530 |
+| -6.96577 |      1.000000 |   0.981437 |           1 |            1 |           0 |  7.05044 | 0.1741220 |
+| -7.79978 |      0.938588 |   0.981437 |           2 |            3 |           0 |  7.90278 | 0.4524330 |
+| -8.03911 |      0.914943 |   0.981437 |           1 |            1 |           0 |  8.37788 | 0.4756070 |
+|      ... |           ... |        ... |         ... |          ... |         ... |      ... |       ... |
+| -8.18569 |      0.860997 |   0.981437 |           1 |            3 |           0 |  8.25262 | 0.0853588 |
+| -8.18569 |      0.908823 |   0.981437 |           1 |            1 |           0 |  9.04813 | 0.0853588 |
+| -6.98477 |      0.992594 |   0.981437 |           1 |            3 |           0 |  8.04992 | 0.1711970 |
+| -7.27203 |      0.944476 |   0.981437 |           1 |            1 |           0 |  7.27889 | 0.1385310 |
+| -9.62973 |      0.651520 |   0.981437 |           1 |            3 |           0 | 11.02130 | 0.5913280 |
+| -7.70420 |      1.000000 |   0.981437 |           1 |            1 |           0 |  9.09206 | 0.4424600 |
+| -6.79609 |      1.000000 |   0.981437 |           1 |            3 |           0 |  7.41275 | 0.2900240 |
+| -6.97156 |      0.945741 |   0.981437 |           1 |            1 |           0 |  6.97303 | 0.3390580 |
+| -8.37895 |      0.566733 |   0.981437 |           1 |            3 |           0 | 10.04090 | 0.0781774 |
+| -8.66052 |      0.971625 |   0.981437 |           1 |            1 |           0 |  8.82721 | 0.0691151 |
+| -8.47833 |      1.000000 |   0.981437 |           1 |            1 |           0 |  8.85035 | 0.0748063 |
 
 
 
