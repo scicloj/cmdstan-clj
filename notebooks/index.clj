@@ -7,6 +7,8 @@
             [clojure.java.io :as io]
             [tech.v3.dataset.print :as print]
             [clojure.string :as str]
+            [scicloj.noj.v1.vis.hanami :as hanami]
+            [aerial.hanami.templates :as ht]
             [scicloj.kindly.v4.kind :as kind]))
 
 
@@ -56,7 +58,18 @@
             (.write writer "\n"))
           (recur (.readLine reader))))))
 
+(def samples
+  (-> processed-samples-path
+      (tc/dataset {:key-fn keyword})
+      (tc/set-dataset-name "model samples")
+      (tc/add-column :i (fn [ds]
+                          (-> ds tc/row-count range)))))
 
-(-> processed-samples-path
-    tc/dataset
-    (tc/set-dataset-name "model samples"))
+
+(-> samples
+    (hanami/histogram :theta {:nbins 100}))
+
+
+(-> samples
+    (hanami/plot ht/line-chart {:X :i
+                                :Y :theta}))
