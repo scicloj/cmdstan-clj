@@ -15,6 +15,15 @@
 
 ;; ## Walkthrough
 
+;; Compile a prior model if this has not been done yet.
+;;
+;; In our probabilistic model here,
+;; we have we have an observed vector $y$
+;; of $N$ samples.
+;; We have an unobserved parameter $\theta \sim Beta(1,1)$,
+;; and the elements of $y$ are conditionally independent
+;; given $\theta$, and distributed $Bernoulli(\theta)$ each.
+
 (def model
   (stan/model
    "
@@ -30,27 +39,44 @@ model {
        y ~ bernoulli(theta);
        }"))
 
+;; Here is the output of compiling out model:
+
 (-> model
     :out
     kind/code)
+
+;; Here are some toy data:
 
 (def data
   {:N 10
    :y [0 1 0 0 0 0 0 0 0 1]})
 
+;; Let us sample from the posterior of $\theta$
+;; given out observed $y# in the data.
+;; (Soon we will support relevant options
+;; to control the sampling process.)
+
 (def sampling
   (stan/sample model data))
+
+;; Here is the output of sampling process.
 
 (-> sampling
     :out
     kind/code)
 
+;; Here are the sampels:
+
 (-> sampling
     :samples)
+
+;; The histogram of $\theta$:
 
 (-> sampling
     :samples
     (hanami/histogram :theta {:nbins 100}))
+
+;; The trace plot of $\theta$:
 
 (-> sampling
     :samples
