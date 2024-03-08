@@ -1,4 +1,4 @@
-(ns scicloj.cmdstan-clj.api
+(ns scicloj.cmdstan-clj.v1.api
   (:require [scicloj.tempfiles.api :as tempfiles]
             [clojure.java.io :as io]
             [charred.api :as charred]
