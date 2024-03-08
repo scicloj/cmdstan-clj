@@ -1,4 +1,7 @@
-{:deps {scicloj/tablecloth {:mvn/version "7.021"}}
+{:deps {techascent/tech.ml.dataset {:mvn/version "7.028"}
+        com.cnuernber/charred {:mvn/version "1.034"} ; ahead of tech.ml.datasets with a bugfix
+        org.scicloj/tempfiles {:mvn/version "1-alpha3"}}
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {org.scicloj/clay {:mvn/version "2-alpha81"}
-                              org.scicloj/noj {:mvn/version "1-alpha28"}}}}}
+                              org.scicloj/noj {:mvn/version "1-alpha28"}
+                              scicloj/tablecloth {:mvn/version "7.021"}}}}}
