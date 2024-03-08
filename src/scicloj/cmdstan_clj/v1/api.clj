@@ -7,8 +7,6 @@
 
 (def stan-home (System/getenv "STAN_HOME"))
 
-(tempfiles/tempfile! [ ])
-
 (defn stan-model [code]
   (let [path (tempfiles/tempfile! "")]
     (shell/sh "make" path
