@@ -36,6 +36,15 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 
 ## Walkthrough
 
+Compile a prior model if this has not been done yet.
+
+In our probabilistic model here,
+we have we have an observed vector $y$
+of $N$ samples.
+We have an unobserved parameter $\theta \sim Beta(1,1)$,
+and the elements of $y$ are conditionally independent
+given $\theta$, and distributed $Bernoulli(\theta)$ each.
+
 
 ::: {.sourceClojure}
 ```clojure
@@ -57,6 +66,8 @@ model {
 :::
 
 
+Here is the output of compiling out model:
+
 
 ::: {.sourceClojure}
 ```clojure
@@ -70,20 +81,13 @@ model {
 
 ::: {.sourceClojure}
 ```clojure
-
---- Translating Stan model to C++ code ---
-bin/stanc  --o=/tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.hpp /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.stan
-
---- Compiling C++ code ---
-g++ -Wno-deprecated-declarations -std=c++1y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020.3/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.1.0/ -I lib/CLI11-1.9.1/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.4.0 -I stan/lib/stan_math/lib/boost_1.81.0 -I stan/lib/stan_math/lib/sundials_6.1.1/include -I stan/lib/stan_math/lib/sundials_6.1.1/src/sundials    -DBOOST_DISABLE_ASSERTS          -c -Wno-ignored-attributes   -x c++ -o /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.o /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.hpp
-
---- Linking model ---
-g++ -Wno-deprecated-declarations -std=c++1y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020.3/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.1.0/ -I lib/CLI11-1.9.1/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.4.0 -I stan/lib/stan_math/lib/boost_1.81.0 -I stan/lib/stan_math/lib/sundials_6.1.1/include -I stan/lib/stan_math/lib/sundials_6.1.1/src/sundials    -DBOOST_DISABLE_ASSERTS               -Wl,-L,"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb" -Wl,-rpath,"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb"        /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.o src/cmdstan/main.o       -ltbb   stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_nvecserial.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_cvodes.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_idas.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_kinsol.a  stan/lib/stan_math/lib/tbb/libtbb.so.2 -o /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800
-rm /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.hpp /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.o
+make: '/tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800' is up to date.
 
 ```
 :::
 
+
+Here are some toy data:
 
 
 ::: {.sourceClojure}
@@ -95,6 +99,11 @@ rm /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.
 :::
 
 
+Let us sample from the posterior of $\theta$
+given out observed $y# in the data.
+(Soon we will support relevant options
+to control the sampling process.)
+
 
 ::: {.sourceClojure}
 ```clojure
@@ -103,6 +112,8 @@ rm /tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800.
 ```
 :::
 
+
+Here is the output of sampling process.
 
 
 ::: {.sourceClojure}
@@ -145,12 +156,12 @@ method = sample (Default)
     num_chains = 1 (Default)
 id = 1 (Default)
 data
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-14088774368984012072.json
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-9342901033557427200.json
 init = 2 (Default)
 random
-  seed = 662862294 (Default)
+  seed = 664141335 (Default)
 output
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-5240347583271014355.csv
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-2474848715388464878.csv
   diagnostic_file =  (Default)
   refresh = 100 (Default)
   sig_figs = -1 (Default)
@@ -159,8 +170,8 @@ output
 num_threads = 1 (Default)
 
 
-Gradient evaluation took 4e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
+Gradient evaluation took 5e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
 Adjust your expectations accordingly!
 
 
@@ -188,13 +199,15 @@ Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.006 seconds (Sampling)
-               0.008 seconds (Total)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
 
 
 ```
 :::
 
+
+Here are the sampels:
 
 
 ::: {.sourceClojure}
@@ -207,32 +220,34 @@ Iteration: 2000 / 2000 [100%]  (Sampling)
 
 model samples [1000 9]:
 
-|     :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i |
-|----------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|
-|  -7.12544 |       1.000000 |    0.859805 |            2 |             7 |            0 |   7.20144 | 0.1531110 |   0 |
-|  -6.76049 |       0.970390 |    0.859805 |            1 |             3 |            0 |   7.45602 | 0.2700770 |   1 |
-|  -6.80729 |       0.994531 |    0.859805 |            2 |             7 |            0 |   6.81126 | 0.2086960 |   2 |
-|  -6.75292 |       0.984932 |    0.859805 |            2 |             3 |            0 |   6.95163 | 0.2377610 |   3 |
-|  -6.75191 |       0.998344 |    0.859805 |            1 |             3 |            0 |   6.76801 | 0.2611350 |   4 |
-|  -6.75994 |       0.971193 |    0.859805 |            2 |             3 |            0 |   6.98571 | 0.2696260 |   5 |
-|  -7.41472 |       0.815642 |    0.859805 |            1 |             3 |            0 |   8.13669 | 0.1268770 |   6 |
-|  -7.46915 |       0.994143 |    0.859805 |            1 |             1 |            0 |   7.53916 | 0.1229150 |   7 |
-| -10.83030 |       0.772239 |    0.859805 |            2 |             3 |            0 |  10.84110 | 0.0296003 |   8 |
-| -11.70970 |       0.977921 |    0.859805 |            2 |             3 |            0 |  12.56390 | 0.0215387 |   9 |
-|       ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |
-|  -6.99687 |       0.999978 |    0.859805 |            3 |             7 |            0 |   6.99700 | 0.1694110 | 989 |
-|  -7.01396 |       0.997582 |    0.859805 |            2 |             7 |            0 |   7.02251 | 0.3475950 | 990 |
-|  -7.11601 |       0.992393 |    0.859805 |            2 |             3 |            0 |   7.14978 | 0.3658820 | 991 |
-|  -6.88775 |       1.000000 |    0.859805 |            1 |             1 |            0 |   7.06661 | 0.3196070 | 992 |
-|  -6.76509 |       0.850704 |    0.859805 |            2 |             3 |            0 |   8.09324 | 0.2273950 | 993 |
-|  -6.75753 |       0.988335 |    0.859805 |            2 |             3 |            0 |   6.86855 | 0.2330350 | 994 |
-|  -6.79028 |       0.989506 |    0.859805 |            1 |             3 |            0 |   6.85700 | 0.2874560 | 995 |
-|  -6.76836 |       1.000000 |    0.859805 |            1 |             1 |            0 |   6.78631 | 0.2757560 | 996 |
-|  -6.76162 |       0.993124 |    0.859805 |            1 |             3 |            0 |   6.82491 | 0.2297700 | 997 |
-|  -6.75534 |       0.996477 |    0.859805 |            1 |             3 |            0 |   6.79467 | 0.2653220 | 998 |
-|  -6.86932 |       0.965500 |    0.859805 |            1 |             3 |            0 |   7.00964 | 0.1920450 | 999 |
+|    :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i |
+|---------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|
+| -6.80212 |       1.000000 |    0.962205 |            1 |             3 |            0 |   8.38096 | 0.2925370 |   0 |
+| -7.47170 |       0.849009 |    0.962205 |            1 |             3 |            0 |   7.47430 | 0.4159750 |   1 |
+| -6.82065 |       1.000000 |    0.962205 |            1 |             3 |            0 |   7.25706 | 0.2995270 |   2 |
+| -6.76882 |       0.968800 |    0.962205 |            2 |             3 |            0 |   6.97445 | 0.2760500 |   3 |
+| -7.95253 |       0.797756 |    0.962205 |            2 |             3 |            0 |   7.99414 | 0.0953469 |   4 |
+| -7.46592 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.91101 | 0.1231440 |   5 |
+| -7.06524 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.39689 | 0.1602100 |   6 |
+| -7.29910 |       0.985568 |    0.962205 |            2 |             3 |            0 |   7.32100 | 0.1361580 |   7 |
+| -9.23919 |       0.891444 |    0.962205 |            2 |             3 |            0 |   9.48656 | 0.5672480 |   8 |
+| -6.75825 |       1.000000 |    0.962205 |            1 |             3 |            0 |   8.77507 | 0.2324080 |   9 |
+|      ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |
+| -7.03891 |       1.000000 |    0.962205 |            2 |             3 |            0 |   8.33433 | 0.1635890 | 989 |
+| -6.92256 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.03166 | 0.1814050 | 990 |
+| -8.81586 |       0.712960 |    0.962205 |            1 |             3 |            0 |   9.19633 | 0.0647031 | 991 |
+| -7.09859 |       0.817178 |    0.962205 |            1 |             3 |            0 |  10.27320 | 0.3629420 | 992 |
+| -7.53625 |       0.674640 |    0.962205 |            1 |             3 |            0 |   8.65947 | 0.1183310 | 993 |
+| -6.75204 |       0.982534 |    0.962205 |            1 |             3 |            0 |   7.53879 | 0.2389140 | 994 |
+| -6.74817 |       0.991699 |    0.962205 |            2 |             3 |            0 |   6.80041 | 0.2478810 | 995 |
+| -9.00212 |       0.654036 |    0.962205 |            2 |             3 |            0 |   9.06338 | 0.0598762 | 996 |
+| -9.21856 |       0.982747 |    0.962205 |            1 |             1 |            0 |   9.45728 | 0.0548190 | 997 |
+| -8.03728 |       1.000000 |    0.962205 |            1 |             1 |            0 |   9.09410 | 0.0915267 | 998 |
+| -6.91107 |       1.000000 |    0.962205 |            1 |             3 |            0 |   7.92088 | 0.1835200 | 999 |
 
 
+
+The histogram of $\theta$:
 
 
 ::: {.sourceClojure}
@@ -249,6 +264,8 @@ model samples [1000 9]:
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
 ```
 
+
+The trace plot of $\theta$:
 
 
 ::: {.sourceClojure}
