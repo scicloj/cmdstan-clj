@@ -8,10 +8,16 @@
 
 (def stan-home (System/getenv "STAN_HOME"))
 
+(def code->stan-path
+  (memoize (fn [code]
+             (let [path (:path (tempfiles/tempfile! ".stan"))]
+               (spit path code)
+               path))))
+
 (defn model [code]
-  (let [path-stan (:path (tempfiles/tempfile! ".stan"))
-        path (str/replace path-stan #"\.stan$" "")
-        _ (spit path-stan code)
+  (let [path (-> code
+                 code->stan-path
+                 (str/replace #"\.stan$" ""))
         ret (shell/sh "make" path
                       :dir stan-home)]
     (assoc ret
