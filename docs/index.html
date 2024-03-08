@@ -115,171 +115,420 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            [clojure.string <span class="at">:as</span> <span class="kw">str</span>]</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            [scicloj.noj.v1.vis.hanami <span class="at">:as</span> hanami]</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            [aerial.hanami.templates <span class="at">:as</span> ht]</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            [scicloj.kindly.v4.kind <span class="at">:as</span> kind]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            [scicloj.cmdstan-clj.v1.api <span class="at">:as</span> stan]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="walkthrough" class="level2">
 <h2 class="anchored" data-anchor-id="walkthrough">Walkthrough</h2>
-<p>Here we reproduce <a href="https://mc-stan.org/cmdstanr/articles/cmdstanr.html">CmdStanR’s intro</a>. Eventually, of course, most of the details below should be generalized and transparent.</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> cmdstan-path </span>(System/getenv <span class="st">"CMDSTAN_PATH"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> model-path</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">str</span> (System/getProperty <span class="st">"user.dir"</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>       <span class="st">"/notebooks/bernoulli"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(shell/sh <span class="st">"make"</span> model-path</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">:dir</span> cmdstan-path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="printedClojure">
-<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>{<span class="at">:exit</span> <span class="dv">0</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> <span class="at">:out</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a> <span class="st">"make: Nothing to be done for '/workspace/Dropbox/projects/scicloj/main-projects/cmdstan-clj/notebooks/bernoulli'.</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> <span class="at">:err</span> <span class="st">""</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> model</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (stan/model</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">      int&lt;lower=0&gt; N;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">      array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">            real&lt;lower=0,upper=1&gt; theta;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">       theta ~ beta(1,1);  // uniform prior on interval 0,1</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">       y ~ bernoulli(theta);</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">       }"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> data</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  {<span class="at">:N</span> <span class="dv">10</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">:y</span> [<span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> model</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> json-path </span><span class="st">"temp/bernoulli.data.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>--- Translating Stan model to C++ code ---</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>bin/stanc  --o=/tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>hpp /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>stan</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>--- Compiling C++ code ---</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>g++ -Wno-deprecated-declarations -std=c++<span class="dv">1</span>y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020<span class="fl">.3</span>/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.<span class="fl">1.0</span>/ -I lib/CLI11<span class="dv">-1</span>.<span class="fl">9.1</span>/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.<span class="fl">4.0</span> -I stan/lib/stan_math/lib/boost_1.<span class="fl">81.0</span> -I stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/include -I stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/src/sundials    -DBOOST_DISABLE_ASSERTS          -c -Wno-ignored-attributes   -x c++ -o /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>o /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>hpp</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>--- Linking model ---</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>g++ -Wno-deprecated-declarations -std=c++<span class="dv">1</span>y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020<span class="fl">.3</span>/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.<span class="fl">1.0</span>/ -I lib/CLI11<span class="dv">-1</span>.<span class="fl">9.1</span>/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.<span class="fl">4.0</span> -I stan/lib/stan_math/lib/boost_1.<span class="fl">81.0</span> -I stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/include -I stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/src/sundials    -DBOOST_DISABLE_ASSERTS               -Wl,-L,<span class="st">"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb"</span> -Wl,-rpath,<span class="st">"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb"</span>        /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>o src/cmdstan/main.o       -ltbb   stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/lib/libsundials_nvecserial.a stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/lib/libsundials_cvodes.a stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/lib/libsundials_idas.a stan/lib/stan_math/lib/sundials_6.<span class="fl">1.1</span>/lib/libsundials_kinsol.a  stan/lib/stan_math/lib/tbb/libtbb.so<span class="fl">.2</span> -o /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="dv">-8576567770860138800</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>rm /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>hpp /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8576567770860138800.</span>o</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(io/make-parents json-path)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="printedClojure">
-<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(charred/write-json json-path data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="printedClojure">
-<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="va">nil</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> data</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  {<span class="at">:N</span> <span class="dv">10</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">:y</span> [<span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> samples-path </span><span class="st">"temp/bernoulli.samples.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> sampling</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (stan/sample model data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb13"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> (shell/sh model-path <span class="st">"sample"</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"data"</span> (<span class="kw">str</span> <span class="st">"file="</span> json-path)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"output"</span> (<span class="kw">str</span> <span class="st">"file="</span> samples-path))</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb14"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>method <span class="kw">=</span> sample (Default)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  sample</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    num_samples <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    num_warmup <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    save_warmup <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    thin <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    adapt</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      engaged <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      gamma <span class="kw">=</span> <span class="fl">0.05</span> (Default)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      delta <span class="kw">=</span> <span class="fl">0.8</span> (Default)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      kappa <span class="kw">=</span> <span class="fl">0.75</span> (Default)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      t0 <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      init_buffer <span class="kw">=</span> <span class="dv">75</span> (Default)</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      term_buffer <span class="kw">=</span> <span class="dv">50</span> (Default)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>      window <span class="kw">=</span> <span class="dv">25</span> (Default)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      save_metric <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    algorithm <span class="kw">=</span> hmc (Default)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>      hmc</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        engine <span class="kw">=</span> nuts (Default)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>          nuts</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>            max_depth <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        metric <span class="kw">=</span> diag_e (Default)</span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        metric_file <span class="kw">=</span>  (Default)</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        stepsize <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        stepsize_jitter <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    num_chains <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>id <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>data</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> temp/bernoulli.data.json</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>init <span class="kw">=</span> <span class="dv">2</span> (Default)</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>random</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">656561128</span> (Default)</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>output</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> temp/bernoulli.samples.csv</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  diagnostic_file <span class="kw">=</span>  (Default)</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  refresh <span class="kw">=</span> <span class="dv">100</span> (Default)</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  sig_figs <span class="kw">=</span> -<span class="dv">1</span> (Default)</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  profile_file <span class="kw">=</span> profile.csv (Default)</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>  save_cmdstan_config <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>num_threads <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">6e-06</span> seconds</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.06</span> seconds.</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Sampling)</span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.009</span> seconds (Total)</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>method <span class="kw">=</span> sample (Default)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  sample</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    num_samples <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    num_warmup <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    save_warmup <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    thin <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    adapt</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      engaged <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      gamma <span class="kw">=</span> <span class="fl">0.05</span> (Default)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      delta <span class="kw">=</span> <span class="fl">0.8</span> (Default)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      kappa <span class="kw">=</span> <span class="fl">0.75</span> (Default)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      t0 <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      init_buffer <span class="kw">=</span> <span class="dv">75</span> (Default)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      term_buffer <span class="kw">=</span> <span class="dv">50</span> (Default)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      window <span class="kw">=</span> <span class="dv">25</span> (Default)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      save_metric <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    algorithm <span class="kw">=</span> hmc (Default)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      hmc</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        engine <span class="kw">=</span> nuts (Default)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>          nuts</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            max_depth <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        metric <span class="kw">=</span> diag_e (Default)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        metric_file <span class="kw">=</span>  (Default)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        stepsize <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        stepsize_jitter <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    num_chains <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>id <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>data</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-14088774368984012072.</span>json</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>init <span class="kw">=</span> <span class="dv">2</span> (Default)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>random</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">662862294</span> (Default)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>output</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-5240347583271014355.</span>csv</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  diagnostic_file <span class="kw">=</span>  (Default)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  refresh <span class="kw">=</span> <span class="dv">100</span> (Default)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  sig_figs <span class="kw">=</span> -<span class="dv">1</span> (Default)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  profile_file <span class="kw">=</span> profile.csv (Default)</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  save_cmdstan_config <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>num_threads <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">4e-06</span> seconds</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.04</span> seconds.</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
+<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.006</span> seconds (Sampling)</span>
+<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.008</span> seconds (Total)</span>
+<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb15"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> processed-samples-path </span><span class="st">"temp/bernoulli.samples.processed.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Filter out comment lines.</p>
+<p>model samples [1000 9]:</p>
+<table class="table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 14%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 10%">
+<col style="width: 10%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">:lp__</th>
+<th style="text-align: right;">:accept_stat__</th>
+<th style="text-align: right;">:stepsize__</th>
+<th style="text-align: right;">:treedepth__</th>
+<th style="text-align: right;">:n_leapfrog__</th>
+<th style="text-align: right;">:divergent__</th>
+<th style="text-align: right;">:energy__</th>
+<th style="text-align: right;">:theta</th>
+<th style="text-align: right;">:i</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-7.12544</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.20144</td>
+<td style="text-align: right;">0.1531110</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.76049</td>
+<td style="text-align: right;">0.970390</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.45602</td>
+<td style="text-align: right;">0.2700770</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.80729</td>
+<td style="text-align: right;">0.994531</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.81126</td>
+<td style="text-align: right;">0.2086960</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.75292</td>
+<td style="text-align: right;">0.984932</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.95163</td>
+<td style="text-align: right;">0.2377610</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.75191</td>
+<td style="text-align: right;">0.998344</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.76801</td>
+<td style="text-align: right;">0.2611350</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.75994</td>
+<td style="text-align: right;">0.971193</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.98571</td>
+<td style="text-align: right;">0.2696260</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-7.41472</td>
+<td style="text-align: right;">0.815642</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.13669</td>
+<td style="text-align: right;">0.1268770</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-7.46915</td>
+<td style="text-align: right;">0.994143</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.53916</td>
+<td style="text-align: right;">0.1229150</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-10.83030</td>
+<td style="text-align: right;">0.772239</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">10.84110</td>
+<td style="text-align: right;">0.0296003</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-11.70970</td>
+<td style="text-align: right;">0.977921</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">12.56390</td>
+<td style="text-align: right;">0.0215387</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.99687</td>
+<td style="text-align: right;">0.999978</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.99700</td>
+<td style="text-align: right;">0.1694110</td>
+<td style="text-align: right;">989</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-7.01396</td>
+<td style="text-align: right;">0.997582</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.02251</td>
+<td style="text-align: right;">0.3475950</td>
+<td style="text-align: right;">990</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-7.11601</td>
+<td style="text-align: right;">0.992393</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.14978</td>
+<td style="text-align: right;">0.3658820</td>
+<td style="text-align: right;">991</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.88775</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.06661</td>
+<td style="text-align: right;">0.3196070</td>
+<td style="text-align: right;">992</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.76509</td>
+<td style="text-align: right;">0.850704</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8.09324</td>
+<td style="text-align: right;">0.2273950</td>
+<td style="text-align: right;">993</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.75753</td>
+<td style="text-align: right;">0.988335</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.86855</td>
+<td style="text-align: right;">0.2330350</td>
+<td style="text-align: right;">994</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.79028</td>
+<td style="text-align: right;">0.989506</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.85700</td>
+<td style="text-align: right;">0.2874560</td>
+<td style="text-align: right;">995</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.76836</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.78631</td>
+<td style="text-align: right;">0.2757560</td>
+<td style="text-align: right;">996</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.76162</td>
+<td style="text-align: right;">0.993124</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.82491</td>
+<td style="text-align: right;">0.2297700</td>
+<td style="text-align: right;">997</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-6.75534</td>
+<td style="text-align: right;">0.996477</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6.79467</td>
+<td style="text-align: right;">0.2653220</td>
+<td style="text-align: right;">998</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-6.86932</td>
+<td style="text-align: right;">0.965500</td>
+<td style="text-align: right;">0.859805</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.00964</td>
+<td style="text-align: right;">0.1920450</td>
+<td style="text-align: right;">999</td>
+</tr>
+</tbody>
+</table>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb16"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">with-open</span> [reader (io/reader samples-path)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            writer (io/writer</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                    processed-samples-path)]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">loop</span> [line (.readLine reader)]</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">when</span> line</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>      (<span class="kw">do</span> (<span class="kw">when-not</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>              (.startsWith line <span class="st">"#"</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            (.write writer line)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>            (.write writer <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>))</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>          (<span class="kw">recur</span> (.readLine reader))))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="printedClojure">
-<div class="sourceCode" id="cb17"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="va">nil</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb18"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> samples</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">-&gt;</span> processed-samples-path</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>      (tc/dataset {<span class="at">:key-fn</span> <span class="kw">keyword</span>})</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      (tc/set-dataset-name <span class="st">"model samples"</span>)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>      (tc/add-column <span class="at">:i</span> (<span class="kw">fn</span> [ds]</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                          (<span class="kw">-&gt;</span> ds tc/row-count <span class="kw">range</span>)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="sourceClojure">
-<div class="sourceCode" id="cb19"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> samples</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    (hanami/histogram <span class="at">:theta</span> {<span class="at">:nbins</span> <span class="dv">100</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (hanami/histogram <span class="at">:theta</span> {<span class="at">:nbins</span> <span class="dv">100</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb20"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> samples</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    (hanami/plot ht/line-chart {<span class="at">:X</span> <span class="at">:i</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:Y</span> <span class="at">:theta</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    (hanami/plot ht/line-chart {<span class="at">:X</span> <span class="at">:i</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:Y</span> <span class="at">:theta</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"x":{"field":"i","type":"quantitative"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div>
 <div style="background-color:grey;height:2px;width:100%;"></div>
