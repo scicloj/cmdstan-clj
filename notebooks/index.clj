@@ -9,67 +9,35 @@
             [clojure.string :as str]
             [scicloj.noj.v1.vis.hanami :as hanami]
             [aerial.hanami.templates :as ht]
-            [scicloj.kindly.v4.kind :as kind]))
+            [scicloj.kindly.v4.kind :as kind]
+            [scicloj.cmdstan-clj.v1.api :as stan]))
 
 
 ;; ## Walkthrough
 
-;; Here we reproduce [CmdStanR's intro](https://mc-stan.org/cmdstanr/articles/cmdstanr.html). Eventually, of course, most of the details below should be generalized and transparent.
-
-(def cmdstan-path (System/getenv "CMDSTAN_PATH"))
-
-(def model-path
-  (str (System/getProperty "user.dir")
-       "/notebooks/bernoulli"))
-
-(shell/sh "make" model-path
-          :dir cmdstan-path)
+(def model (-> "notebooks/bernoulli.stan"
+               slurp
+               stan/model))
 
 (def data
   {:N 10
    :y [0 1 0 0 0 0 0 0 0 1]})
 
+(def sampling
+  (stan/sample model data))
 
-(def json-path "temp/bernoulli.data.json")
-
-(io/make-parents json-path)
-
-(charred/write-json json-path data)
-
-(def samples-path "temp/bernoulli.samples.csv")
-
-(-> (shell/sh model-path "sample"
-              "data" (str "file=" json-path)
-              "output" (str "file=" samples-path))
+(-> sampling
     :out
     kind/code)
 
-(def processed-samples-path "temp/bernoulli.samples.processed.csv")
+(-> sampling
+    :samples)
 
-;; Filter out comment lines.
-(with-open [reader (io/reader samples-path)
-            writer (io/writer
-                    processed-samples-path)]
-  (loop [line (.readLine reader)]
-    (when line
-      (do (when-not
-              (.startsWith line "#")
-            (.write writer line)
-            (.write writer "\n"))
-          (recur (.readLine reader))))))
-
-(def samples
-  (-> processed-samples-path
-      (tc/dataset {:key-fn keyword})
-      (tc/set-dataset-name "model samples")
-      (tc/add-column :i (fn [ds]
-                          (-> ds tc/row-count range)))))
-
-
-(-> samples
+(-> sampling
+    :samples
     (hanami/histogram :theta {:nbins 100}))
 
-
-(-> samples
+(-> sampling
+    :samples
     (hanami/plot ht/line-chart {:X :i
                                 :Y :theta}))
