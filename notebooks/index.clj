@@ -15,7 +15,7 @@
 
 ;; ## Walkthrough
 
-;; Compile a prior model if this has not been done yet.
+;; Let us define our model.
 ;;
 ;; In our probabilistic model here,
 ;; we have we have an observed vector $y$
@@ -24,9 +24,8 @@
 ;; and the elements of $y$ are conditionally independent
 ;; given $\theta$, and distributed $Bernoulli(\theta)$ each.
 
-(def model
-  (stan/model
-   "
+(def model-code
+  "
 data {
       int<lower=0> N;
       array[N] int<lower=0,upper=1> y;
@@ -37,9 +36,15 @@ parameters {
 model {
        theta ~ beta(1,1);  // uniform prior on interval 0,1
        y ~ bernoulli(theta);
-       }"))
+       }")
 
-;; Here is the output of compiling out model:
+
+;; Now we may compile the model,
+;; if this has not been done yet.
+(def model
+  (stan/model model-code))
+
+;; Here is the output of compiling our model:
 
 (-> model
     :out
