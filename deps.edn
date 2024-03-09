@@ -4,4 +4,7 @@
  :aliases {:dev {:extra-paths ["notebooks"]
                  :extra-deps {org.scicloj/clay {:mvn/version "2-alpha81"}
                               org.scicloj/noj {:mvn/version "1-alpha28"}
-                              scicloj/tablecloth {:mvn/version "7.021"}}}}}
+                              scicloj/tablecloth {:mvn/version "7.021"}}}
+           :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
+                          slipset/deps-deploy {:mvn/version "0.2.1"}}
+                   :ns-default build}}}
