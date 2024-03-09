@@ -1,6 +1,6 @@
 # cmdstan-clj
 
-Accessing the [Stan](https://mc-stan.org/) statistical modeling language from Clojure through [CmdStan](https://mc-stan.org/users/interfaces/cmdstan).
+cmdstan-clj is a Clojure wrapper of [Stan](https://mc-stan.org/) probabilistic programming language that uses the [CmdStan](https://mc-stan.org/users/interfaces/cmdstan) CLI.
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/cmdstan-clj.svg)](https://clojars.org/org.scicloj/cmdstan-clj)
 
