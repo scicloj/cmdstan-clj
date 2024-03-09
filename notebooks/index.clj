@@ -10,6 +10,7 @@
             [scicloj.noj.v1.vis.hanami :as hanami]
             [aerial.hanami.templates :as ht]
             [scicloj.kindly.v4.kind :as kind]
+            [scicloj.noj.v1.stats :as stats]
             [scicloj.cmdstan-clj.v1.api :as stan]))
 
 
@@ -79,7 +80,11 @@ model {
 
 (-> sampling
     :samples
-    (hanami/histogram :theta {:nbins 100}))
+    (tc/group-by [:chain] {:result-type :as-map})
+    (update-vals
+     (fn [chain-samples]
+       (-> chain-samples
+           (hanami/histogram :theta {:nbins 100})))))
 
 ;; The trace plot of $\theta$:
 
