@@ -36,7 +36,7 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 
 ## Walkthrough
 
-Compile a prior model if this has not been done yet.
+Let us define our model.
 
 In our probabilistic model here,
 we have we have an observed vector $y$
@@ -48,9 +48,8 @@ given $\theta$, and distributed $Bernoulli(\theta)$ each.
 
 ::: {.sourceClojure}
 ```clojure
-(def model
-  (stan/model
-   "
+(def model-code
+  "
 data {
       int<lower=0> N;
       array[N] int<lower=0,upper=1> y;
@@ -61,12 +60,24 @@ parameters {
 model {
        theta ~ beta(1,1);  // uniform prior on interval 0,1
        y ~ bernoulli(theta);
-       }"))
+       }")
 ```
 :::
 
 
-Here is the output of compiling out model:
+Now we may compile the model,
+if this has not been done yet.
+
+
+::: {.sourceClojure}
+```clojure
+(def model
+  (stan/model model-code))
+```
+:::
+
+
+Here is the output of compiling our model:
 
 
 ::: {.sourceClojure}
@@ -156,12 +167,12 @@ method = sample (Default)
     num_chains = 4
 id = 1 (Default)
 data
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-3386773314455486488.json
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-12504373429944319048.json
 init = 2 (Default)
 random
-  seed = 742307850 (Default)
+  seed = 742505681 (Default)
 output
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-8704350238753017269.csv
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-17124531096619153906.csv
   diagnostic_file =  (Default)
   refresh = 100 (Default)
   sig_figs = -1 (Default)
@@ -170,8 +181,8 @@ output
 num_threads = 1 (Default)
 
 
-Gradient evaluation took 5e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.05 seconds.
+Gradient evaluation took 4e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Adjust your expectations accordingly!
 
 
@@ -182,8 +193,8 @@ Adjust your expectations accordingly!
 
 
 
-Gradient evaluation took 0 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Gradient evaluation took 1e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
 Adjust your expectations accordingly!
 
 
@@ -217,8 +228,8 @@ Chain [1] Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Chain [1] Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.006 seconds (Sampling)
-               0.008 seconds (Total)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
 
 Chain [2] Iteration:    1 / 2000 [  0%]  (Warmup)
 Chain [2] Iteration:  100 / 2000 [  5%]  (Warmup)
@@ -271,8 +282,8 @@ Chain [3] Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Chain [3] Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.006 seconds (Sampling)
-               0.008 seconds (Total)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
 
 Chain [4] Iteration:    1 / 2000 [  0%]  (Warmup)
 Chain [4] Iteration:  100 / 2000 [  5%]  (Warmup)
@@ -298,8 +309,8 @@ Chain [4] Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Chain [4] Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.006 seconds (Sampling)
-               0.008 seconds (Total)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
 
 
 ```
@@ -319,30 +330,30 @@ Here are the sampels:
 
 model samples [4000 10]:
 
-|     :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i | :chain |
-|----------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|-------:|
-|  -7.83857 |       0.823665 |    0.814710 |            1 |             3 |            0 |  10.51970 | 0.4563540 |   0 |      0 |
-|  -7.51348 |       1.000000 |    0.814710 |            2 |             3 |            0 |   7.88349 | 0.4210050 |   1 |      0 |
-|  -7.47843 |       1.000000 |    0.814710 |            1 |             1 |            0 |   7.68145 | 0.4167940 |   2 |      0 |
-|  -7.07248 |       1.000000 |    0.814710 |            2 |             3 |            0 |   7.39297 | 0.3584090 |   3 |      0 |
-|  -6.82766 |       0.967739 |    0.814710 |            2 |             3 |            0 |   7.32882 | 0.3019500 |   4 |      0 |
-|  -6.76388 |       1.000000 |    0.814710 |            2 |             7 |            0 |   6.81508 | 0.2281890 |   5 |      0 |
-|  -7.88522 |       0.771540 |    0.814710 |            1 |             3 |            0 |   8.47123 | 0.0985553 |   6 |      0 |
-|  -6.76410 |       0.998386 |    0.814710 |            2 |             7 |            0 |   7.67111 | 0.2728520 |   7 |      0 |
-| -10.39150 |       0.583930 |    0.814710 |            3 |             7 |            0 |  10.40720 | 0.0348226 |   8 |      0 |
-|  -9.35319 |       0.972185 |    0.814710 |            2 |             7 |            0 |  10.36080 | 0.5745010 |   9 |      0 |
-|       ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |    ... |
-|  -7.38719 |       0.887251 |    0.787417 |            2 |             3 |            0 |   7.92793 | 0.4053680 | 989 |      3 |
-|  -7.03367 |       0.861041 |    0.787417 |            1 |             3 |            0 |   8.76454 | 0.1642840 | 990 |      3 |
-|  -7.26089 |       0.990249 |    0.787417 |            2 |             3 |            0 |   7.26206 | 0.1395320 | 991 |      3 |
-|  -7.37724 |       0.986536 |    0.787417 |            1 |             1 |            0 |   7.41375 | 0.1297480 | 992 |      3 |
-|  -7.48508 |       0.785889 |    0.787417 |            3 |             7 |            0 |  11.82640 | 0.1217980 | 993 |      3 |
-|  -6.83324 |       0.926782 |    0.787417 |            1 |             3 |            0 |   8.45724 | 0.3038060 | 994 |      3 |
-|  -7.34735 |       0.785540 |    0.787417 |            1 |             3 |            0 |   8.35396 | 0.1321280 | 995 |      3 |
-|  -6.74822 |       1.000000 |    0.787417 |            2 |             3 |            0 |   7.24775 | 0.2475480 | 996 |      3 |
-|  -7.37780 |       0.859319 |    0.787417 |            1 |             3 |            0 |   7.83614 | 0.1297040 | 997 |      3 |
-|  -7.04185 |       0.992693 |    0.787417 |            2 |             3 |            0 |   7.54129 | 0.1632030 | 998 |      3 |
-|  -6.93359 |       1.000000 |    0.787417 |            1 |             1 |            0 |   7.03157 | 0.1794520 | 999 |      3 |
+|    :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i | :chain |
+|---------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|-------:|
+| -7.41382 |       1.000000 |    0.777441 |            1 |             1 |            0 |   7.85868 | 0.1269450 |   0 |      0 |
+| -7.41382 |       0.550202 |    0.777441 |            1 |             3 |            0 |  13.02730 | 0.1269450 |   1 |      0 |
+| -7.41228 |       1.000000 |    0.777441 |            1 |             1 |            0 |   7.52623 | 0.1270600 |   2 |      0 |
+| -7.37431 |       1.000000 |    0.777441 |            1 |             1 |            0 |   7.50176 | 0.1299770 |   3 |      0 |
+| -6.93588 |       0.931852 |    0.777441 |            1 |             3 |            0 |   8.12785 | 0.3312790 |   4 |      0 |
+| -6.80454 |       0.967858 |    0.777441 |            1 |             3 |            0 |   7.13454 | 0.2096250 |   5 |      0 |
+| -6.79949 |       1.000000 |    0.777441 |            1 |             1 |            0 |   6.81325 | 0.2113960 |   6 |      0 |
+| -6.79284 |       1.000000 |    0.777441 |            1 |             1 |            0 |   6.80609 | 0.2138760 |   7 |      0 |
+| -6.86624 |       0.995038 |    0.777441 |            2 |             3 |            0 |   6.86643 | 0.1927360 |   8 |      0 |
+| -6.88913 |       0.995606 |    0.777441 |            1 |             1 |            0 |   6.90740 | 0.1878160 |   9 |      0 |
+|      ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |    ... |
+| -7.44225 |       0.837832 |    1.054200 |            1 |             3 |            0 |   7.52977 | 0.4123490 | 989 |      3 |
+| -7.14448 |       1.000000 |    1.054200 |            1 |             1 |            0 |   7.43295 | 0.3705500 | 990 |      3 |
+| -6.76120 |       0.986628 |    1.054200 |            2 |             3 |            0 |   7.24248 | 0.2300850 | 991 |      3 |
+| -7.08888 |       0.729946 |    1.054200 |            2 |             3 |            0 |   8.44645 | 0.1573260 | 992 |      3 |
+| -7.29277 |       0.962178 |    1.054200 |            1 |             1 |            0 |   7.32332 | 0.1367060 | 993 |      3 |
+| -7.20813 |       1.000000 |    1.054200 |            1 |             1 |            0 |   7.35312 | 0.1444920 | 994 |      3 |
+| -7.00512 |       0.787117 |    1.054200 |            2 |             3 |            0 |  10.29140 | 0.1682220 | 995 |      3 |
+| -7.52014 |       0.922386 |    1.054200 |            1 |             3 |            0 |   7.52022 | 0.1194030 | 996 |      3 |
+| -7.20534 |       0.910383 |    1.054200 |            1 |             3 |            0 |   8.46004 | 0.3800390 | 997 |      3 |
+| -6.87471 |       1.000000 |    1.054200 |            1 |             1 |            0 |   7.10577 | 0.3161360 | 998 |      3 |
+| -7.94309 |       0.665075 |    1.054200 |            1 |             3 |            0 |   8.96780 | 0.0957875 | 999 |      3 |
 
 
 

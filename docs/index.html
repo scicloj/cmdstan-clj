@@ -149,234 +149,238 @@ window.Quarto = {
 </div>
 <section id="walkthrough" class="level2">
 <h2 class="anchored" data-anchor-id="walkthrough">Walkthrough</h2>
-<p>Compile a prior model if this has not been done yet.</p>
+<p>Let us define our model.</p>
 <p>In our probabilistic model here, we have we have an observed vector <span class="math inline">\(y\)</span> of <span class="math inline">\(N\)</span> samples. We have an unobserved parameter <span class="math inline">\(\theta \sim Beta(1,1)\)</span>, and the elements of <span class="math inline">\(y\)</span> are conditionally independent given <span class="math inline">\(\theta\)</span>, and distributed <span class="math inline">\(Bernoulli(\theta)\)</span> each.</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> model</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  (stan/model</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>   <span class="st">"</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">      int&lt;lower=0&gt; N;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">      array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">            real&lt;lower=0,upper=1&gt; theta;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">       theta ~ beta(1,1);  // uniform prior on interval 0,1</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">       y ~ bernoulli(theta);</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">       }"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> model-code</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">data {</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">      int&lt;lower=0&gt; N;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">      array[N] int&lt;lower=0,upper=1&gt; y;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">      }</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">parameters {</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">            real&lt;lower=0,upper=1&gt; theta;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">            }</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">model {</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">       theta ~ beta(1,1);  // uniform prior on interval 0,1</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">       y ~ bernoulli(theta);</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">       }"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Here is the output of compiling out model:</p>
+<p>Now we may compile the model, if this has not been done yet.</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> model</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> model</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  (stan/model model-code))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is the output of compiling our model:</p>
+<div class="sourceClojure">
+<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> model</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb4"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>make: <span class="at">'/tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800'</span> <span class="kw">is</span> <span class="kw">up</span> to date.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>make: <span class="at">'/tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800'</span> <span class="kw">is</span> <span class="kw">up</span> to date.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here are some toy data:</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb5"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> data</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  {<span class="at">:N</span> <span class="dv">10</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">:y</span> [<span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> data</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  {<span class="at">:N</span> <span class="dv">10</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">:y</span> [<span class="dv">0</span> <span class="dv">1</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">0</span> <span class="dv">1</span>]})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let us sample from the posterior of <span class="math inline">\(\theta\)</span> given out observed <span class="math inline">\(y\)</span> in the data. (Soon we will support relevant options to control the sampling process.)</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb6"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> sampling</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  (stan/sample model data {<span class="at">:num-chains</span> <span class="dv">4</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="bu">def</span><span class="fu"> sampling</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  (stan/sample model data {<span class="at">:num-chains</span> <span class="dv">4</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here is the output of sampling process.</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb7"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:out</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    kind/code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb8"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>method <span class="kw">=</span> sample (Default)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  sample</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    num_samples <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    num_warmup <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    save_warmup <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    thin <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    adapt</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      engaged <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      gamma <span class="kw">=</span> <span class="fl">0.05</span> (Default)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      delta <span class="kw">=</span> <span class="fl">0.8</span> (Default)</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      kappa <span class="kw">=</span> <span class="fl">0.75</span> (Default)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      t0 <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      init_buffer <span class="kw">=</span> <span class="dv">75</span> (Default)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      term_buffer <span class="kw">=</span> <span class="dv">50</span> (Default)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      window <span class="kw">=</span> <span class="dv">25</span> (Default)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      save_metric <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    algorithm <span class="kw">=</span> hmc (Default)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>      hmc</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        engine <span class="kw">=</span> nuts (Default)</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>          nuts</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            max_depth <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        metric <span class="kw">=</span> diag_e (Default)</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        metric_file <span class="kw">=</span>  (Default)</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        stepsize <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>        stepsize_jitter <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    num_chains <span class="kw">=</span> <span class="dv">4</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>id <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>data</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-3386773314455486488.</span>json</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>init <span class="kw">=</span> <span class="dv">2</span> (Default)</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>random</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">742307850</span> (Default)</span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>output</span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-8704350238753017269.</span>csv</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  diagnostic_file <span class="kw">=</span>  (Default)</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  refresh <span class="kw">=</span> <span class="dv">100</span> (Default)</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>  sig_figs <span class="kw">=</span> -<span class="dv">1</span> (Default)</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  profile_file <span class="kw">=</span> profile.csv (Default)</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  save_cmdstan_config <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>num_threads <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">5e-06</span> seconds</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.05</span> seconds.</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">1e-06</span> seconds</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.01</span> seconds.</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="dv">0</span> seconds</span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="dv">0</span> seconds.</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">1e-06</span> seconds</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.01</span> seconds.</span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-78"><a href="#cb8-78" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-79"><a href="#cb8-79" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-80"><a href="#cb8-80" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-81"><a href="#cb8-81" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-82"><a href="#cb8-82" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-83"><a href="#cb8-83" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-84"><a href="#cb8-84" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-85"><a href="#cb8-85" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-86"><a href="#cb8-86" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-87"><a href="#cb8-87" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-88"><a href="#cb8-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-89"><a href="#cb8-89" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb8-90"><a href="#cb8-90" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.006</span> seconds (Sampling)</span>
-<span id="cb8-91"><a href="#cb8-91" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.008</span> seconds (Total)</span>
-<span id="cb8-92"><a href="#cb8-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-93"><a href="#cb8-93" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-94"><a href="#cb8-94" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-95"><a href="#cb8-95" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-96"><a href="#cb8-96" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-97"><a href="#cb8-97" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-98"><a href="#cb8-98" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-99"><a href="#cb8-99" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-100"><a href="#cb8-100" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-101"><a href="#cb8-101" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-102"><a href="#cb8-102" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-103"><a href="#cb8-103" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-104"><a href="#cb8-104" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-105"><a href="#cb8-105" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-106"><a href="#cb8-106" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-107"><a href="#cb8-107" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-108"><a href="#cb8-108" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-109"><a href="#cb8-109" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-110"><a href="#cb8-110" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-111"><a href="#cb8-111" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-112"><a href="#cb8-112" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-113"><a href="#cb8-113" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-114"><a href="#cb8-114" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-115"><a href="#cb8-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-116"><a href="#cb8-116" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb8-117"><a href="#cb8-117" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.005</span> seconds (Sampling)</span>
-<span id="cb8-118"><a href="#cb8-118" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Total)</span>
-<span id="cb8-119"><a href="#cb8-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-120"><a href="#cb8-120" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-121"><a href="#cb8-121" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-122"><a href="#cb8-122" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-123"><a href="#cb8-123" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-124"><a href="#cb8-124" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-125"><a href="#cb8-125" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-126"><a href="#cb8-126" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-127"><a href="#cb8-127" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-128"><a href="#cb8-128" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-129"><a href="#cb8-129" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-130"><a href="#cb8-130" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-131"><a href="#cb8-131" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-132"><a href="#cb8-132" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-133"><a href="#cb8-133" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-134"><a href="#cb8-134" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-135"><a href="#cb8-135" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-136"><a href="#cb8-136" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-137"><a href="#cb8-137" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-138"><a href="#cb8-138" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-139"><a href="#cb8-139" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-140"><a href="#cb8-140" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-141"><a href="#cb8-141" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-142"><a href="#cb8-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-143"><a href="#cb8-143" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb8-144"><a href="#cb8-144" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.006</span> seconds (Sampling)</span>
-<span id="cb8-145"><a href="#cb8-145" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.008</span> seconds (Total)</span>
-<span id="cb8-146"><a href="#cb8-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-147"><a href="#cb8-147" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-148"><a href="#cb8-148" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-149"><a href="#cb8-149" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-150"><a href="#cb8-150" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-151"><a href="#cb8-151" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-152"><a href="#cb8-152" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-153"><a href="#cb8-153" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-154"><a href="#cb8-154" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-155"><a href="#cb8-155" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-156"><a href="#cb8-156" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-157"><a href="#cb8-157" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
-<span id="cb8-158"><a href="#cb8-158" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-159"><a href="#cb8-159" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-160"><a href="#cb8-160" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-161"><a href="#cb8-161" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-162"><a href="#cb8-162" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-163"><a href="#cb8-163" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-164"><a href="#cb8-164" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-165"><a href="#cb8-165" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-166"><a href="#cb8-166" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-167"><a href="#cb8-167" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-168"><a href="#cb8-168" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
-<span id="cb8-169"><a href="#cb8-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-170"><a href="#cb8-170" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
-<span id="cb8-171"><a href="#cb8-171" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.006</span> seconds (Sampling)</span>
-<span id="cb8-172"><a href="#cb8-172" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.008</span> seconds (Total)</span>
-<span id="cb8-173"><a href="#cb8-173" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>method <span class="kw">=</span> sample (Default)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  sample</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    num_samples <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    num_warmup <span class="kw">=</span> <span class="dv">1000</span> (Default)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    save_warmup <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    thin <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    adapt</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      engaged <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>      gamma <span class="kw">=</span> <span class="fl">0.05</span> (Default)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      delta <span class="kw">=</span> <span class="fl">0.8</span> (Default)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      kappa <span class="kw">=</span> <span class="fl">0.75</span> (Default)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      t0 <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      init_buffer <span class="kw">=</span> <span class="dv">75</span> (Default)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      term_buffer <span class="kw">=</span> <span class="dv">50</span> (Default)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      window <span class="kw">=</span> <span class="dv">25</span> (Default)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>      save_metric <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    algorithm <span class="kw">=</span> hmc (Default)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      hmc</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        engine <span class="kw">=</span> nuts (Default)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>          nuts</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>            max_depth <span class="kw">=</span> <span class="dv">10</span> (Default)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        metric <span class="kw">=</span> diag_e (Default)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        metric_file <span class="kw">=</span>  (Default)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        stepsize <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        stepsize_jitter <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    num_chains <span class="kw">=</span> <span class="dv">4</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>id <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>data</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-12504373429944319048.</span>json</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>init <span class="kw">=</span> <span class="dv">2</span> (Default)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>random</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  seed <span class="kw">=</span> <span class="dv">742505681</span> (Default)</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>output</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  file <span class="kw">=</span> /tmp/scicloj-files/session-dir<span class="dv">-11604659191568896558</span>/file<span class="fl">-17124531096619153906.</span>csv</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  diagnostic_file <span class="kw">=</span>  (Default)</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  refresh <span class="kw">=</span> <span class="dv">100</span> (Default)</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  sig_figs <span class="kw">=</span> -<span class="dv">1</span> (Default)</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>  profile_file <span class="kw">=</span> profile.csv (Default)</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  save_cmdstan_config <span class="kw">=</span> <span class="dv">0</span> (Default)</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>num_threads <span class="kw">=</span> <span class="dv">1</span> (Default)</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">4e-06</span> seconds</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.04</span> seconds.</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">1e-06</span> seconds</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.01</span> seconds.</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">1e-06</span> seconds</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.01</span> seconds.</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>Gradient evaluation took <span class="fl">1e-06</span> seconds</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="dv">1000</span> transitions using <span class="dv">10</span> leapfrog steps per transition would <span class="kw">take</span> <span class="fl">0.01</span> seconds.</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>Adjust your expectations accordingly!</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">1</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.005</span> seconds (Sampling)</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Total)</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">2</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.005</span> seconds (Sampling)</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Total)</span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">3</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
+<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.005</span> seconds (Sampling)</span>
+<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Total)</span>
+<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:    <span class="dv">1</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">0</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-148"><a href="#cb9-148" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">100</span> <span class="kw">/</span> <span class="dv">2000</span> [  <span class="dv">5</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-149"><a href="#cb9-149" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">10</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-150"><a href="#cb9-150" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">15</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-151"><a href="#cb9-151" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">20</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">25</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">30</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">35</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">40</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration:  <span class="dv">900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">45</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1000</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Warmup)</span>
+<span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1001</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">50</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1100</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">55</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1200</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">60</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1300</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">65</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-162"><a href="#cb9-162" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1400</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">70</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-163"><a href="#cb9-163" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1500</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">75</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-164"><a href="#cb9-164" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1600</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">80</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-165"><a href="#cb9-165" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1700</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">85</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-166"><a href="#cb9-166" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1800</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">90</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-167"><a href="#cb9-167" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">1900</span> <span class="kw">/</span> <span class="dv">2000</span> [ <span class="dv">95</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-168"><a href="#cb9-168" aria-hidden="true" tabindex="-1"></a>Chain [<span class="dv">4</span>] Iteration: <span class="dv">2000</span> <span class="kw">/</span> <span class="dv">2000</span> [<span class="dv">100</span><span class="va">%</span>]  (Sampling)</span>
+<span id="cb9-169"><a href="#cb9-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-170"><a href="#cb9-170" aria-hidden="true" tabindex="-1"></a> Elapsed Time: <span class="fl">0.002</span> seconds (Warm-up)</span>
+<span id="cb9-171"><a href="#cb9-171" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.005</span> seconds (Sampling)</span>
+<span id="cb9-172"><a href="#cb9-172" aria-hidden="true" tabindex="-1"></a>               <span class="fl">0.007</span> seconds (Total)</span>
+<span id="cb9-173"><a href="#cb9-173" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here are the sampels:</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb9"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>model samples [4000 10]:</p>
 <table class="table">
 <colgroup>
-<col style="width: 9%">
+<col style="width: 8%">
 <col style="width: 13%">
 <col style="width: 11%">
 <col style="width: 11%">
@@ -403,122 +407,122 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">-7.83857</td>
-<td style="text-align: right;">0.823665</td>
-<td style="text-align: right;">0.814710</td>
+<td style="text-align: right;">-7.41382</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.777441</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">10.51970</td>
-<td style="text-align: right;">0.4563540</td>
+<td style="text-align: right;">7.85868</td>
+<td style="text-align: right;">0.1269450</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.51348</td>
-<td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">-7.41382</td>
+<td style="text-align: right;">0.550202</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.88349</td>
-<td style="text-align: right;">0.4210050</td>
+<td style="text-align: right;">13.02730</td>
+<td style="text-align: right;">0.1269450</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-7.47843</td>
+<td style="text-align: right;">-7.41228</td>
 <td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.814710</td>
+<td style="text-align: right;">0.777441</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.68145</td>
-<td style="text-align: right;">0.4167940</td>
+<td style="text-align: right;">7.52623</td>
+<td style="text-align: right;">0.1270600</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.07248</td>
+<td style="text-align: right;">-7.37431</td>
 <td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.39297</td>
-<td style="text-align: right;">0.3584090</td>
+<td style="text-align: right;">7.50176</td>
+<td style="text-align: right;">0.1299770</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-6.82766</td>
-<td style="text-align: right;">0.967739</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">-6.93588</td>
+<td style="text-align: right;">0.931852</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.32882</td>
-<td style="text-align: right;">0.3019500</td>
+<td style="text-align: right;">8.12785</td>
+<td style="text-align: right;">0.3312790</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-6.76388</td>
-<td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">-6.80454</td>
+<td style="text-align: right;">0.967858</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">6.81508</td>
-<td style="text-align: right;">0.2281890</td>
+<td style="text-align: right;">7.13454</td>
+<td style="text-align: right;">0.2096250</td>
 <td style="text-align: right;">5</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-7.88522</td>
-<td style="text-align: right;">0.771540</td>
-<td style="text-align: right;">0.814710</td>
+<td style="text-align: right;">-6.79949</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.777441</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">8.47123</td>
-<td style="text-align: right;">0.0985553</td>
+<td style="text-align: right;">6.81325</td>
+<td style="text-align: right;">0.2113960</td>
 <td style="text-align: right;">6</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-6.76410</td>
-<td style="text-align: right;">0.998386</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">-6.79284</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.67111</td>
-<td style="text-align: right;">0.2728520</td>
+<td style="text-align: right;">6.80609</td>
+<td style="text-align: right;">0.2138760</td>
 <td style="text-align: right;">7</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-10.39150</td>
-<td style="text-align: right;">0.583930</td>
-<td style="text-align: right;">0.814710</td>
+<td style="text-align: right;">-6.86624</td>
+<td style="text-align: right;">0.995038</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">7</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">10.40720</td>
-<td style="text-align: right;">0.0348226</td>
+<td style="text-align: right;">6.86643</td>
+<td style="text-align: right;">0.1927360</td>
 <td style="text-align: right;">8</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-9.35319</td>
-<td style="text-align: right;">0.972185</td>
-<td style="text-align: right;">0.814710</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">-6.88913</td>
+<td style="text-align: right;">0.995606</td>
+<td style="text-align: right;">0.777441</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">10.36080</td>
-<td style="text-align: right;">0.5745010</td>
+<td style="text-align: right;">6.90740</td>
+<td style="text-align: right;">0.1878160</td>
 <td style="text-align: right;">9</td>
 <td style="text-align: right;">0</td>
 </tr>
@@ -535,134 +539,134 @@ window.Quarto = {
 <td style="text-align: right;">…</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.38719</td>
-<td style="text-align: right;">0.887251</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">-7.44225</td>
+<td style="text-align: right;">0.837832</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.92793</td>
-<td style="text-align: right;">0.4053680</td>
+<td style="text-align: right;">7.52977</td>
+<td style="text-align: right;">0.4123490</td>
 <td style="text-align: right;">989</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-7.03367</td>
-<td style="text-align: right;">0.861041</td>
-<td style="text-align: right;">0.787417</td>
+<td style="text-align: right;">-7.14448</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">1.054200</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">8.76454</td>
-<td style="text-align: right;">0.1642840</td>
+<td style="text-align: right;">7.43295</td>
+<td style="text-align: right;">0.3705500</td>
 <td style="text-align: right;">990</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.26089</td>
-<td style="text-align: right;">0.990249</td>
-<td style="text-align: right;">0.787417</td>
+<td style="text-align: right;">-6.76120</td>
+<td style="text-align: right;">0.986628</td>
+<td style="text-align: right;">1.054200</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.26206</td>
-<td style="text-align: right;">0.1395320</td>
+<td style="text-align: right;">7.24248</td>
+<td style="text-align: right;">0.2300850</td>
 <td style="text-align: right;">991</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-7.37724</td>
-<td style="text-align: right;">0.986536</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">-7.08888</td>
+<td style="text-align: right;">0.729946</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.41375</td>
-<td style="text-align: right;">0.1297480</td>
+<td style="text-align: right;">8.44645</td>
+<td style="text-align: right;">0.1573260</td>
 <td style="text-align: right;">992</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.48508</td>
-<td style="text-align: right;">0.785889</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">-7.29277</td>
+<td style="text-align: right;">0.962178</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">11.82640</td>
-<td style="text-align: right;">0.1217980</td>
+<td style="text-align: right;">7.32332</td>
+<td style="text-align: right;">0.1367060</td>
 <td style="text-align: right;">993</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-6.83324</td>
-<td style="text-align: right;">0.926782</td>
-<td style="text-align: right;">0.787417</td>
+<td style="text-align: right;">-7.20813</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">1.054200</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">8.45724</td>
-<td style="text-align: right;">0.3038060</td>
+<td style="text-align: right;">7.35312</td>
+<td style="text-align: right;">0.1444920</td>
 <td style="text-align: right;">994</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.34735</td>
-<td style="text-align: right;">0.785540</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">-7.00512</td>
+<td style="text-align: right;">0.787117</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">8.35396</td>
-<td style="text-align: right;">0.1321280</td>
+<td style="text-align: right;">10.29140</td>
+<td style="text-align: right;">0.1682220</td>
 <td style="text-align: right;">995</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-6.74822</td>
-<td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">-7.52014</td>
+<td style="text-align: right;">0.922386</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.24775</td>
-<td style="text-align: right;">0.2475480</td>
+<td style="text-align: right;">7.52022</td>
+<td style="text-align: right;">0.1194030</td>
 <td style="text-align: right;">996</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-7.37780</td>
-<td style="text-align: right;">0.859319</td>
-<td style="text-align: right;">0.787417</td>
+<td style="text-align: right;">-7.20534</td>
+<td style="text-align: right;">0.910383</td>
+<td style="text-align: right;">1.054200</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.83614</td>
-<td style="text-align: right;">0.1297040</td>
+<td style="text-align: right;">8.46004</td>
+<td style="text-align: right;">0.3800390</td>
 <td style="text-align: right;">997</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
-<td style="text-align: right;">-7.04185</td>
-<td style="text-align: right;">0.992693</td>
-<td style="text-align: right;">0.787417</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">-6.87471</td>
+<td style="text-align: right;">1.000000</td>
+<td style="text-align: right;">1.054200</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.54129</td>
-<td style="text-align: right;">0.1632030</td>
+<td style="text-align: right;">7.10577</td>
+<td style="text-align: right;">0.3161360</td>
 <td style="text-align: right;">998</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">-6.93359</td>
-<td style="text-align: right;">1.000000</td>
-<td style="text-align: right;">0.787417</td>
+<td style="text-align: right;">-7.94309</td>
+<td style="text-align: right;">0.665075</td>
+<td style="text-align: right;">1.054200</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7.03157</td>
-<td style="text-align: right;">0.1794520</td>
+<td style="text-align: right;">8.96780</td>
+<td style="text-align: right;">0.0957875</td>
 <td style="text-align: right;">999</td>
 <td style="text-align: right;">3</td>
 </tr>
@@ -670,19 +674,19 @@ window.Quarto = {
 </table>
 <p>The histogram of <span class="math inline">\(\theta\)</span>:</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb10"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (hanami/histogram <span class="at">:theta</span> {<span class="at">:nbins</span> <span class="dv">100</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    (hanami/histogram <span class="at">:theta</span> {<span class="at">:nbins</span> <span class="dv">100</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div>
 <p>The trace plot of <span class="math inline">\(\theta\)</span>:</p>
 <div class="sourceClojure">
-<div class="sourceCode" id="cb11"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    (hanami/plot ht/line-chart {<span class="at">:X</span> <span class="at">:i</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:Y</span> <span class="at">:theta</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:COLOR</span> <span class="st">"chain"</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:OPACITY</span> <span class="fl">0.5</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode clojure code-with-copy"><code class="sourceCode clojure"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">-&gt;</span> sampling</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">:samples</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    (hanami/plot ht/line-chart {<span class="at">:X</span> <span class="at">:i</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:Y</span> <span class="at">:theta</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:COLOR</span> <span class="st">"chain"</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">:OPACITY</span> <span class="fl">0.5</span>}))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"color":{"field":"chain","type":"nominal"},"opacity":{"value":0.5},"x":{"field":"i","type":"quantitative"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div>
 <div style="background-color:grey;height:2px;width:100%;"></div>
