@@ -2,7 +2,7 @@
 
 Accessing the [Stan](https://mc-stan.org/) statistical modeling language from Clojure through [CmdStan](https://mc-stan.org/users/interfaces/cmdstan).
 
-[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/kindly.svg)](https://clojars.org/org.scicloj/kindly)
+[![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/cmdsta-nclj.svg)](https://clojars.org/org.scicloj/cmdstan-clj)
 
 ## Status 
 
