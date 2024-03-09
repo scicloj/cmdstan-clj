@@ -108,7 +108,7 @@ to control the sampling process.)
 ::: {.sourceClojure}
 ```clojure
 (def sampling
-  (stan/sample model data))
+  (stan/sample model data {:num-chains 4}))
 ```
 :::
 
@@ -153,15 +153,15 @@ method = sample (Default)
         metric_file =  (Default)
         stepsize = 1 (Default)
         stepsize_jitter = 0 (Default)
-    num_chains = 1 (Default)
+    num_chains = 4
 id = 1 (Default)
 data
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-9342901033557427200.json
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-2645946455935434414.json
 init = 2 (Default)
 random
-  seed = 664141335 (Default)
+  seed = 741275381 (Default)
 output
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-2474848715388464878.csv
+  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-14431063062129271167.csv
   diagnostic_file =  (Default)
   refresh = 100 (Default)
   sig_figs = -1 (Default)
@@ -175,28 +175,127 @@ Gradient evaluation took 5e-06 seconds
 Adjust your expectations accordingly!
 
 
-Iteration:    1 / 2000 [  0%]  (Warmup)
-Iteration:  100 / 2000 [  5%]  (Warmup)
-Iteration:  200 / 2000 [ 10%]  (Warmup)
-Iteration:  300 / 2000 [ 15%]  (Warmup)
-Iteration:  400 / 2000 [ 20%]  (Warmup)
-Iteration:  500 / 2000 [ 25%]  (Warmup)
-Iteration:  600 / 2000 [ 30%]  (Warmup)
-Iteration:  700 / 2000 [ 35%]  (Warmup)
-Iteration:  800 / 2000 [ 40%]  (Warmup)
-Iteration:  900 / 2000 [ 45%]  (Warmup)
-Iteration: 1000 / 2000 [ 50%]  (Warmup)
-Iteration: 1001 / 2000 [ 50%]  (Sampling)
-Iteration: 1100 / 2000 [ 55%]  (Sampling)
-Iteration: 1200 / 2000 [ 60%]  (Sampling)
-Iteration: 1300 / 2000 [ 65%]  (Sampling)
-Iteration: 1400 / 2000 [ 70%]  (Sampling)
-Iteration: 1500 / 2000 [ 75%]  (Sampling)
-Iteration: 1600 / 2000 [ 80%]  (Sampling)
-Iteration: 1700 / 2000 [ 85%]  (Sampling)
-Iteration: 1800 / 2000 [ 90%]  (Sampling)
-Iteration: 1900 / 2000 [ 95%]  (Sampling)
-Iteration: 2000 / 2000 [100%]  (Sampling)
+
+Gradient evaluation took 1e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Adjust your expectations accordingly!
+
+
+
+Gradient evaluation took 0 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+Adjust your expectations accordingly!
+
+
+
+Gradient evaluation took 1e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.01 seconds.
+Adjust your expectations accordingly!
+
+
+Chain [1] Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain [1] Iteration:  100 / 2000 [  5%]  (Warmup)
+Chain [1] Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain [1] Iteration:  300 / 2000 [ 15%]  (Warmup)
+Chain [1] Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain [1] Iteration:  500 / 2000 [ 25%]  (Warmup)
+Chain [1] Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain [1] Iteration:  700 / 2000 [ 35%]  (Warmup)
+Chain [1] Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain [1] Iteration:  900 / 2000 [ 45%]  (Warmup)
+Chain [1] Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain [1] Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain [1] Iteration: 1100 / 2000 [ 55%]  (Sampling)
+Chain [1] Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain [1] Iteration: 1300 / 2000 [ 65%]  (Sampling)
+Chain [1] Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain [1] Iteration: 1500 / 2000 [ 75%]  (Sampling)
+Chain [1] Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain [1] Iteration: 1700 / 2000 [ 85%]  (Sampling)
+Chain [1] Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain [1] Iteration: 1900 / 2000 [ 95%]  (Sampling)
+Chain [1] Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.002 seconds (Warm-up)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
+
+Chain [2] Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain [2] Iteration:  100 / 2000 [  5%]  (Warmup)
+Chain [2] Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain [2] Iteration:  300 / 2000 [ 15%]  (Warmup)
+Chain [2] Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain [2] Iteration:  500 / 2000 [ 25%]  (Warmup)
+Chain [2] Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain [2] Iteration:  700 / 2000 [ 35%]  (Warmup)
+Chain [2] Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain [2] Iteration:  900 / 2000 [ 45%]  (Warmup)
+Chain [2] Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain [2] Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain [2] Iteration: 1100 / 2000 [ 55%]  (Sampling)
+Chain [2] Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain [2] Iteration: 1300 / 2000 [ 65%]  (Sampling)
+Chain [2] Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain [2] Iteration: 1500 / 2000 [ 75%]  (Sampling)
+Chain [2] Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain [2] Iteration: 1700 / 2000 [ 85%]  (Sampling)
+Chain [2] Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain [2] Iteration: 1900 / 2000 [ 95%]  (Sampling)
+Chain [2] Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.002 seconds (Warm-up)
+               0.005 seconds (Sampling)
+               0.007 seconds (Total)
+
+Chain [3] Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain [3] Iteration:  100 / 2000 [  5%]  (Warmup)
+Chain [3] Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain [3] Iteration:  300 / 2000 [ 15%]  (Warmup)
+Chain [3] Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain [3] Iteration:  500 / 2000 [ 25%]  (Warmup)
+Chain [3] Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain [3] Iteration:  700 / 2000 [ 35%]  (Warmup)
+Chain [3] Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain [3] Iteration:  900 / 2000 [ 45%]  (Warmup)
+Chain [3] Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain [3] Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain [3] Iteration: 1100 / 2000 [ 55%]  (Sampling)
+Chain [3] Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain [3] Iteration: 1300 / 2000 [ 65%]  (Sampling)
+Chain [3] Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain [3] Iteration: 1500 / 2000 [ 75%]  (Sampling)
+Chain [3] Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain [3] Iteration: 1700 / 2000 [ 85%]  (Sampling)
+Chain [3] Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain [3] Iteration: 1900 / 2000 [ 95%]  (Sampling)
+Chain [3] Iteration: 2000 / 2000 [100%]  (Sampling)
+
+ Elapsed Time: 0.002 seconds (Warm-up)
+               0.006 seconds (Sampling)
+               0.008 seconds (Total)
+
+Chain [4] Iteration:    1 / 2000 [  0%]  (Warmup)
+Chain [4] Iteration:  100 / 2000 [  5%]  (Warmup)
+Chain [4] Iteration:  200 / 2000 [ 10%]  (Warmup)
+Chain [4] Iteration:  300 / 2000 [ 15%]  (Warmup)
+Chain [4] Iteration:  400 / 2000 [ 20%]  (Warmup)
+Chain [4] Iteration:  500 / 2000 [ 25%]  (Warmup)
+Chain [4] Iteration:  600 / 2000 [ 30%]  (Warmup)
+Chain [4] Iteration:  700 / 2000 [ 35%]  (Warmup)
+Chain [4] Iteration:  800 / 2000 [ 40%]  (Warmup)
+Chain [4] Iteration:  900 / 2000 [ 45%]  (Warmup)
+Chain [4] Iteration: 1000 / 2000 [ 50%]  (Warmup)
+Chain [4] Iteration: 1001 / 2000 [ 50%]  (Sampling)
+Chain [4] Iteration: 1100 / 2000 [ 55%]  (Sampling)
+Chain [4] Iteration: 1200 / 2000 [ 60%]  (Sampling)
+Chain [4] Iteration: 1300 / 2000 [ 65%]  (Sampling)
+Chain [4] Iteration: 1400 / 2000 [ 70%]  (Sampling)
+Chain [4] Iteration: 1500 / 2000 [ 75%]  (Sampling)
+Chain [4] Iteration: 1600 / 2000 [ 80%]  (Sampling)
+Chain [4] Iteration: 1700 / 2000 [ 85%]  (Sampling)
+Chain [4] Iteration: 1800 / 2000 [ 90%]  (Sampling)
+Chain [4] Iteration: 1900 / 2000 [ 95%]  (Sampling)
+Chain [4] Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
                0.005 seconds (Sampling)
@@ -218,32 +317,32 @@ Here are the sampels:
 :::
 
 
-model samples [1000 9]:
+model samples [4000 10]:
 
-|    :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i |
-|---------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|
-| -6.80212 |       1.000000 |    0.962205 |            1 |             3 |            0 |   8.38096 | 0.2925370 |   0 |
-| -7.47170 |       0.849009 |    0.962205 |            1 |             3 |            0 |   7.47430 | 0.4159750 |   1 |
-| -6.82065 |       1.000000 |    0.962205 |            1 |             3 |            0 |   7.25706 | 0.2995270 |   2 |
-| -6.76882 |       0.968800 |    0.962205 |            2 |             3 |            0 |   6.97445 | 0.2760500 |   3 |
-| -7.95253 |       0.797756 |    0.962205 |            2 |             3 |            0 |   7.99414 | 0.0953469 |   4 |
-| -7.46592 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.91101 | 0.1231440 |   5 |
-| -7.06524 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.39689 | 0.1602100 |   6 |
-| -7.29910 |       0.985568 |    0.962205 |            2 |             3 |            0 |   7.32100 | 0.1361580 |   7 |
-| -9.23919 |       0.891444 |    0.962205 |            2 |             3 |            0 |   9.48656 | 0.5672480 |   8 |
-| -6.75825 |       1.000000 |    0.962205 |            1 |             3 |            0 |   8.77507 | 0.2324080 |   9 |
-|      ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |
-| -7.03891 |       1.000000 |    0.962205 |            2 |             3 |            0 |   8.33433 | 0.1635890 | 989 |
-| -6.92256 |       1.000000 |    0.962205 |            1 |             1 |            0 |   7.03166 | 0.1814050 | 990 |
-| -8.81586 |       0.712960 |    0.962205 |            1 |             3 |            0 |   9.19633 | 0.0647031 | 991 |
-| -7.09859 |       0.817178 |    0.962205 |            1 |             3 |            0 |  10.27320 | 0.3629420 | 992 |
-| -7.53625 |       0.674640 |    0.962205 |            1 |             3 |            0 |   8.65947 | 0.1183310 | 993 |
-| -6.75204 |       0.982534 |    0.962205 |            1 |             3 |            0 |   7.53879 | 0.2389140 | 994 |
-| -6.74817 |       0.991699 |    0.962205 |            2 |             3 |            0 |   6.80041 | 0.2478810 | 995 |
-| -9.00212 |       0.654036 |    0.962205 |            2 |             3 |            0 |   9.06338 | 0.0598762 | 996 |
-| -9.21856 |       0.982747 |    0.962205 |            1 |             1 |            0 |   9.45728 | 0.0548190 | 997 |
-| -8.03728 |       1.000000 |    0.962205 |            1 |             1 |            0 |   9.09410 | 0.0915267 | 998 |
-| -6.91107 |       1.000000 |    0.962205 |            1 |             3 |            0 |   7.92088 | 0.1835200 | 999 |
+|     :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |    :theta |  :i | :chain |
+|----------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|----------:|----:|-------:|
+|  -6.84766 |       0.970008 |    0.897794 |            1 |             3 |            0 |   6.92524 | 0.1971480 |   0 |      0 |
+|  -6.78423 |       1.000000 |    0.897794 |            1 |             1 |            0 |   6.83341 | 0.2174090 |   1 |      0 |
+|  -6.75784 |       1.000000 |    0.897794 |            1 |             1 |            0 |   6.77761 | 0.2327650 |   2 |      0 |
+|  -6.75784 |       0.942730 |    0.897794 |            1 |             3 |            0 |   6.99338 | 0.2327650 |   3 |      0 |
+|  -7.57641 |       0.876235 |    0.897794 |            2 |             3 |            0 |   7.69421 | 0.1157310 |   4 |      0 |
+|  -8.31104 |       0.908079 |    0.897794 |            1 |             1 |            0 |   8.31871 | 0.0806015 |   5 |      0 |
+|  -6.85864 |       1.000000 |    0.897794 |            1 |             3 |            0 |   8.29501 | 0.1944900 |   6 |      0 |
+|  -7.04345 |       0.937752 |    0.897794 |            1 |             3 |            0 |   7.32568 | 0.3531670 |   7 |      0 |
+|  -6.85701 |       1.000000 |    0.897794 |            1 |             1 |            0 |   6.99635 | 0.3111440 |   8 |      0 |
+|  -6.83522 |       0.969783 |    0.897794 |            1 |             3 |            0 |   7.04371 | 0.2003710 |   9 |      0 |
+|       ... |            ... |         ... |          ... |           ... |          ... |       ... |       ... | ... |    ... |
+| -10.49240 |       0.560425 |    1.010180 |            1 |             1 |            0 |  11.21090 | 0.6379590 | 989 |      3 |
+|  -6.75620 |       1.000000 |    1.010180 |            1 |             3 |            0 |   9.47469 | 0.2342480 | 990 |      3 |
+|  -6.81195 |       0.988145 |    1.010180 |            1 |             3 |            0 |   6.81236 | 0.2071730 | 991 |      3 |
+|  -7.35026 |       0.691225 |    1.010180 |            2 |             3 |            0 |   9.04936 | 0.1318930 | 992 |      3 |
+|  -6.81943 |       0.941394 |    1.010180 |            1 |             3 |            0 |   7.54067 | 0.2990950 | 993 |      3 |
+|  -6.81943 |       0.872196 |    1.010180 |            1 |             1 |            0 |   7.07482 | 0.2990950 | 994 |      3 |
+|  -6.94014 |       0.959446 |    1.010180 |            1 |             1 |            0 |   6.95130 | 0.3322420 | 995 |      3 |
+|  -7.42294 |       0.786344 |    1.010180 |            2 |             3 |            0 |   8.08829 | 0.1262640 | 996 |      3 |
+|  -9.35209 |       0.811364 |    1.010180 |            2 |             3 |            0 |   9.96058 | 0.0519596 | 997 |      3 |
+|  -7.54695 |       0.955922 |    1.010180 |            1 |             3 |            0 |   9.16323 | 0.1176280 | 998 |      3 |
+|  -6.89645 |       1.000000 |    1.010180 |            1 |             3 |            0 |   7.41715 | 0.1863430 | 999 |      3 |
 
 
 
@@ -273,14 +372,16 @@ The trace plot of $\theta$:
 (-> sampling
     :samples
     (hanami/plot ht/line-chart {:X :i
-                                :Y :theta}))
+                                :Y :theta
+                                :COLOR "chain"
+                                :OPACITY 0.5}))
 ```
 :::
 
 
 
 ```{=html}
-<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"x":{"field":"i","type":"quantitative"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"color":{"field":"chain","type":"nominal"},"opacity":{"value":0.5},"x":{"field":"i","type":"quantitative"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div>
 ```
 
 
