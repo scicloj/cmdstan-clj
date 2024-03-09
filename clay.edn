@@ -1,3 +1,4 @@
 {:remote-repo {:git-url "https://github.com/scicloj/cmdstan-clj"
                :branch "main"}
- :base-target-path "temp"}
+ :base-target-path "temp"
+ :quarto {:format {:html {:theme :cosmo}}}}
