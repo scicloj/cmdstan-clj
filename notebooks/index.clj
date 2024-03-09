@@ -52,7 +52,7 @@ model {
    :y [0 1 0 0 0 0 0 0 0 1]})
 
 ;; Let us sample from the posterior of $\theta$
-;; given out observed $y# in the data.
+;; given out observed $y$ in the data.
 ;; (Soon we will support relevant options
 ;; to control the sampling process.)
 
