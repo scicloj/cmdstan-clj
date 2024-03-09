@@ -57,7 +57,7 @@ model {
 ;; to control the sampling process.)
 
 (def sampling
-  (stan/sample model data))
+  (stan/sample model data {:num-chains 4}))
 
 ;; Here is the output of sampling process.
 
@@ -81,4 +81,6 @@ model {
 (-> sampling
     :samples
     (hanami/plot ht/line-chart {:X :i
-                                :Y :theta}))
+                                :Y :theta
+                                :COLOR "chain"
+                                :OPACITY 0.5}))
