@@ -23,17 +23,42 @@
     (assoc ret
            :path path)))
 
-(defn sample [model data]
-  (let [data-path (:path (tempfiles/tempfile! ".json"))
-        samples-path (:path (tempfiles/tempfile! ".csv"))
-        _ (charred/write-json data-path data)
-        ret (shell/sh (:path model) "sample"
-                      "data" (str "file=" data-path)
-                      "output" (str "file=" samples-path))
-        samples (-> samples-path
-                    (tmd/->dataset {:key-fn keyword}))]
-    (assoc ret
-           :samples (-> samples
-                        (tmd/set-dataset-name "model samples")
-                        (tmd/add-or-update-column :i
-                                                  (-> samples tmd/row-count range))))))
+(defn sample
+  ([model data]
+   (sample model data {}))
+  ([model data {:keys [num-chains]}]
+   (let [data-path (:path (tempfiles/tempfile! ".json"))
+         samples-path (:path (tempfiles/tempfile! ".csv"))
+         _ (charred/write-json data-path data)
+         args [(when num-chains
+                 (str "num_chains=" num-chains))
+               "data" (str "file=" data-path)
+               "output" (str "file=" samples-path)]
+         ret (->> args
+                  (filter some?)
+                  (apply shell/sh (:path model) "sample"))
+         read-csv (fn [path]
+                    (-> path
+                        (tmd/->dataset {:key-fn keyword})
+                        (as-> ds
+                            (tmd/add-or-update-column
+                             ds
+                             :i
+                             (-> ds tmd/row-count range)))))
+         samples (if num-chains
+                   ;; a csv file per chain
+                   (->> num-chains
+                        range
+                        (map (fn [chain]
+                               (-> samples-path
+                                   (str/replace #"\.csv$"
+                                                (str "_" (inc chain) ".csv"))
+                                   read-csv
+                                   (tmd/add-or-update-column :chain chain))))
+                        (apply tmd/concat))
+                   ;; else - one csv file
+                   (-> samples-path
+                       read-csv))]
+     (assoc ret
+            :samples (-> samples
+                         (tmd/set-dataset-name "model samples"))))))
