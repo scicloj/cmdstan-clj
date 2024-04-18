@@ -10,8 +10,6 @@ Currently, this is an evolving proof-of-concept.
 
 ## Usage
 
-This project has not been deployed to Clojars yet. For now, you may clone the repo and play with it.
-
 You will need [CmdStan](https://mc-stan.org/users/interfaces/cmdstan.html) installed in your system, and the environment variable `STAN_HOME` pointing to its location.
 
 Them you can follow the [walkthrough](https://scicloj.github.io/cmdstan-clj).
