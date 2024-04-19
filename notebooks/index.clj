@@ -17,6 +17,7 @@
             [tech.v3.dataset.print :as print]
             [clojure.string :as str]
             [scicloj.noj.v1.vis.hanami :as hanami]
+            [scicloj.noj.v1.vis.stats :as vis.stats ]
             [aerial.hanami.templates :as ht]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.noj.v1.stats :as stats]
@@ -44,9 +45,9 @@ parameters {
             real<lower=0,upper=1> theta;
             }
 model {
-       theta ~ beta(1,1);  // uniform prior on interval 0,1
+       theta ~ beta(1,2);  // uniform prior on interval 0,1
        y ~ bernoulli(theta);
-       }")
+}")
 
 
 ;; Now we may compile the model,
@@ -93,7 +94,7 @@ model {
     (update-vals
      (fn [chain-samples]
        (-> chain-samples
-           (hanami/histogram :theta {:nbins 100})))))
+           (vis.stats/histogram :theta {:nbins 100})))))
 
 ;; The trace plot of $\theta$:
 
