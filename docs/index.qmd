@@ -2,6 +2,7 @@
 ---
 format:
   html: {toc: true, toc-depth: 4, theme: cosmo, output-file: index.html}
+fontsize: 0.9em
 code-block-background: true
 include-in-header: {text: '<link rel = "icon" href = "data:," />'}
 
@@ -10,6 +11,7 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
   background-color: transparent;
   border-style: none;
 }
+</style><style>.clay-limit-image-width .clay-image {max-width: 100%}
 </style>
 <script src="index_files/md-default5.js" type="text/javascript"></script><script src="index_files/md-default6.js" type="text/javascript"></script><script src="index_files/vega7.js" type="text/javascript"></script><script src="index_files/vega8.js" type="text/javascript"></script><script src="index_files/vega9.js" type="text/javascript"></script>
 
@@ -35,6 +37,7 @@ include-in-header: {text: '<link rel = "icon" href = "data:," />'}
             [tech.v3.dataset.print :as print]
             [clojure.string :as str]
             [scicloj.noj.v1.vis.hanami :as hanami]
+            [scicloj.noj.v1.vis.stats :as vis.stats ]
             [aerial.hanami.templates :as ht]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.noj.v1.stats :as stats]
@@ -68,9 +71,9 @@ parameters {
             real<lower=0,upper=1> theta;
             }
 model {
-       theta ~ beta(1,1);  // uniform prior on interval 0,1
+       theta ~ beta(1,2);  // uniform prior on interval 0,1
        y ~ bernoulli(theta);
-       }")
+}")
 ```
 :::
 
@@ -102,7 +105,16 @@ Here is the output of compiling our model:
 
 ::: {.sourceClojure}
 ```clojure
-make: '/tmp/scicloj-files/session-dir-11604659191568896558/file-8576567770860138800' is up to date.
+
+--- Translating Stan model to C++ code ---
+bin/stanc  --o=/tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.hpp /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.stan
+
+--- Compiling C++ code ---
+g++ -Wno-deprecated-declarations -std=c++1y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020.3/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.1.0/ -I lib/CLI11-1.9.1/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.4.0 -I stan/lib/stan_math/lib/boost_1.81.0 -I stan/lib/stan_math/lib/sundials_6.1.1/include -I stan/lib/stan_math/lib/sundials_6.1.1/src/sundials    -DBOOST_DISABLE_ASSERTS          -c -Wno-ignored-attributes   -x c++ -o /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.o /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.hpp
+
+--- Linking model ---
+g++ -Wno-deprecated-declarations -std=c++1y -pthread -D_REENTRANT -Wno-sign-compare -Wno-ignored-attributes      -I stan/lib/stan_math/lib/tbb_2020.3/include    -O3 -I src -I stan/src -I stan/lib/rapidjson_1.1.0/ -I lib/CLI11-1.9.1/ -I stan/lib/stan_math/ -I stan/lib/stan_math/lib/eigen_3.4.0 -I stan/lib/stan_math/lib/boost_1.81.0 -I stan/lib/stan_math/lib/sundials_6.1.1/include -I stan/lib/stan_math/lib/sundials_6.1.1/src/sundials    -DBOOST_DISABLE_ASSERTS               -Wl,-L,"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb" -Wl,-rpath,"/home/daslu/.cmdstan/cmdstan-2.34.1/stan/lib/stan_math/lib/tbb"        /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.o src/cmdstan/main.o       -ltbb   stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_nvecserial.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_cvodes.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_idas.a stan/lib/stan_math/lib/sundials_6.1.1/lib/libsundials_kinsol.a  stan/lib/stan_math/lib/tbb/libtbb.so.2 -o /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201
+rm /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.hpp /tmp/scicloj-files/session-dir-772334480016722166/file-16025118707950248201.o
 
 ```
 :::
@@ -177,12 +189,12 @@ method = sample (Default)
     num_chains = 4
 id = 1 (Default)
 data
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-5927151010105410628.json
+  file = /tmp/scicloj-files/session-dir-772334480016722166/file-9398899209516897676.json
 init = 2 (Default)
 random
-  seed = 744677578 (Default)
+  seed = 4275893379 (Default)
 output
-  file = /tmp/scicloj-files/session-dir-11604659191568896558/file-1500244170315440438.csv
+  file = /tmp/scicloj-files/session-dir-772334480016722166/file-12383328597578324763.csv
   diagnostic_file =  (Default)
   refresh = 100 (Default)
   sig_figs = -1 (Default)
@@ -191,8 +203,8 @@ output
 num_threads = 1 (Default)
 
 
-Gradient evaluation took 6e-06 seconds
-1000 transitions using 10 leapfrog steps per transition would take 0.06 seconds.
+Gradient evaluation took 4e-06 seconds
+1000 transitions using 10 leapfrog steps per transition would take 0.04 seconds.
 Adjust your expectations accordingly!
 
 
@@ -292,8 +304,8 @@ Chain [3] Iteration: 1900 / 2000 [ 95%]  (Sampling)
 Chain [3] Iteration: 2000 / 2000 [100%]  (Sampling)
 
  Elapsed Time: 0.002 seconds (Warm-up)
-               0.005 seconds (Sampling)
-               0.007 seconds (Total)
+               0.006 seconds (Sampling)
+               0.008 seconds (Total)
 
 Chain [4] Iteration:    1 / 2000 [  0%]  (Warmup)
 Chain [4] Iteration:  100 / 2000 [  5%]  (Warmup)
@@ -338,33 +350,36 @@ Here are the sampels:
 :::
 
 
+::: {.clay-dataset}
 model samples [4000 10]:
 
 |    :lp__ | :accept_stat__ | :stepsize__ | :treedepth__ | :n_leapfrog__ | :divergent__ | :energy__ |   :theta |  :i | :chain |
 |---------:|---------------:|------------:|-------------:|--------------:|-------------:|----------:|---------:|----:|-------:|
-| -8.11236 |       0.852541 |    0.911611 |            1 |             1 |            0 |   8.21981 | 0.482261 |   0 |      0 |
-| -7.09564 |       1.000000 |    0.911611 |            1 |             1 |            0 |   7.84041 | 0.362438 |   1 |      0 |
-| -6.98290 |       1.000000 |    0.911611 |            1 |             1 |            0 |   7.10100 | 0.341409 |   2 |      0 |
-| -7.29832 |       0.921769 |    0.911611 |            1 |             1 |            0 |   7.31091 | 0.393478 |   3 |      0 |
-| -7.05176 |       0.824162 |    0.911611 |            1 |             3 |            0 |   8.42956 | 0.161917 |   4 |      0 |
-| -7.06956 |       0.997314 |    0.911611 |            1 |             1 |            0 |   7.11572 | 0.159674 |   5 |      0 |
-| -6.98819 |       1.000000 |    0.911611 |            2 |             3 |            0 |   7.07702 | 0.170687 |   6 |      0 |
-| -6.96291 |       1.000000 |    0.911611 |            2 |             3 |            0 |   7.01444 | 0.174576 |   7 |      0 |
-| -6.84479 |       0.961321 |    0.911611 |            1 |             3 |            0 |   7.34808 | 0.307478 |   8 |      0 |
-| -6.84954 |       0.998868 |    0.911611 |            1 |             1 |            0 |   6.87052 | 0.308926 |   9 |      0 |
+| -7.12545 |       0.975350 |    0.961381 |            1 |             3 |            0 |   7.25170 | 0.286407 |   0 |      0 |
+| -7.12545 |       0.413974 |    0.961381 |            1 |             3 |            0 |  10.85510 | 0.286407 |   1 |      0 |
+| -7.50087 |       0.891145 |    0.961381 |            1 |             1 |            0 |   7.50260 | 0.356258 |   2 |      0 |
+| -7.33047 |       1.000000 |    0.961381 |            1 |             1 |            0 |   7.51297 | 0.329950 |   3 |      0 |
+| -8.20482 |       0.747192 |    0.961381 |            1 |             1 |            0 |   8.22687 | 0.434842 |   4 |      0 |
+| -7.31109 |       1.000000 |    0.961381 |            2 |             3 |            0 |   8.00672 | 0.150667 |   5 |      0 |
+| -7.25856 |       0.944143 |    0.961381 |            1 |             3 |            0 |   7.83573 | 0.316883 |   6 |      0 |
+| -7.16760 |       0.934508 |    0.961381 |            1 |             3 |            0 |   7.62292 | 0.172114 |   7 |      0 |
+| -7.60978 |       0.920585 |    0.961381 |            2 |             3 |            0 |   8.07348 | 0.370857 |   8 |      0 |
+| -7.12582 |       1.000000 |    0.961381 |            1 |             1 |            0 |   7.46068 | 0.286512 |   9 |      0 |
 |      ... |            ... |         ... |          ... |           ... |          ... |       ... |      ... | ... |    ... |
-| -6.74831 |       1.000000 |    1.023060 |            2 |             3 |            0 |   7.12938 | 0.247004 | 989 |      3 |
-| -6.74831 |       0.683211 |    1.023060 |            1 |             3 |            0 |   8.29214 | 0.247004 | 990 |      3 |
-| -6.74802 |       0.999438 |    1.023060 |            2 |             3 |            0 |   6.75135 | 0.249930 | 991 |      3 |
-| -6.74937 |       0.938038 |    1.023060 |            2 |             3 |            0 |   7.07479 | 0.243541 | 992 |      3 |
-| -6.83419 |       0.977264 |    1.023060 |            1 |             3 |            0 |   6.85396 | 0.304116 | 993 |      3 |
-| -6.76144 |       0.994745 |    1.023060 |            1 |             3 |            0 |   6.86275 | 0.229907 | 994 |      3 |
-| -6.79718 |       0.987858 |    1.023060 |            1 |             3 |            0 |   6.83401 | 0.290490 | 995 |      3 |
-| -7.01616 |       0.931399 |    1.023060 |            1 |             1 |            0 |   7.01719 | 0.348021 | 996 |      3 |
-| -9.68096 |       0.376511 |    1.023060 |            1 |             1 |            0 |   9.68218 | 0.594334 | 997 |      3 |
-| -7.10940 |       1.000000 |    1.023060 |            1 |             1 |            0 |   8.74168 | 0.364773 | 998 |      3 |
-| -6.74823 |       0.932219 |    1.023060 |            2 |             3 |            0 |   7.45066 | 0.252559 | 999 |      3 |
+| -7.05018 |       0.750290 |    1.147290 |            1 |             3 |            0 |   8.30659 | 0.204133 | 989 |      3 |
+| -7.11741 |       0.936305 |    1.147290 |            2 |             3 |            0 |   7.45500 | 0.182656 | 990 |      3 |
+| -7.18810 |       0.994007 |    1.147290 |            2 |             3 |            0 |   7.20178 | 0.168430 | 991 |      3 |
+| -7.23906 |       0.987696 |    1.147290 |            1 |             1 |            0 |   7.27223 | 0.160325 | 992 |      3 |
+| -7.03316 |       0.807169 |    1.147290 |            2 |             3 |            0 |   8.64586 | 0.214127 | 993 |      3 |
+| -7.11876 |       0.975819 |    1.147290 |            1 |             3 |            0 |   7.15130 | 0.284487 | 994 |      3 |
+| -7.02329 |       1.000000 |    1.147290 |            1 |             3 |            0 |   7.10092 | 0.226623 | 995 |      3 |
+| -7.78634 |       0.863495 |    1.147290 |            2 |             3 |            0 |   7.94797 | 0.110051 | 996 |      3 |
+| -8.54957 |       0.882045 |    1.147290 |            2 |             3 |            0 |   9.42805 | 0.075029 | 997 |      3 |
+| -7.18714 |       0.840866 |    1.147290 |            2 |             3 |            0 |   9.04786 | 0.301954 | 998 |      3 |
+| -7.03367 |       1.000000 |    1.147290 |            1 |             3 |            0 |   7.13470 | 0.248416 | 999 |      3 |
 
+
+:::
 
 
 The histogram of $\theta$:
@@ -378,7 +393,7 @@ The histogram of $\theta$:
     (update-vals
      (fn [chain-samples]
        (-> chain-samples
-           (hanami/histogram :theta {:nbins 100})))))
+           (vis.stats/histogram :theta {:nbins 100})))))
 ```
 :::
 
@@ -386,10 +401,10 @@ The histogram of $\theta$:
 
 ```{=html}
 <div><p>{</p><div style="margin-left:10%;width:110%;"><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 0}
-</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 1}
-</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 2}
-</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/2.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 3}
-</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"scale":{"zero":false},"field":"left","type":"quantitative","title":"theta"},"y2":{"field":0,"type":"quantitative"},"x2":{"scale":{"zero":false},"field":"right","type":"quantitative"}},"mark":"rect","width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/3.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table></div><p>}</p></div>
+</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"field":"left","type":"quantitative","title":"theta","bin":{"binned":true,"step":0.0063717109999999995}},"x2":{"field":"right","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/0.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 1}
+</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"field":"left","type":"quantitative","title":"theta","bin":{"binned":true,"step":0.005758068000000001}},"x2":{"field":"right","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/1.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 2}
+</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"field":"left","type":"quantitative","title":"theta","bin":{"binned":true,"step":0.006130951}},"x2":{"field":"right","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/2.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table><table><tr><td valign="top"><div><pre><code class="sourceCode language-clojure printed-clojure">{:chain 3}
+</code></pre></div></td><td><div style="margin-left:10px;"><div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"count","type":"quantitative"},"x":{"field":"left","type":"quantitative","title":"theta","bin":{"binned":true,"step":0.006153577}},"x2":{"field":"right","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"bar","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/3.csv","format":{"type":"csv"}}});</script></div></div></td></tr></table></div><p>}</p></div>
 ```
 
 
@@ -410,7 +425,7 @@ The trace plot of $\theta$:
 
 
 ```{=html}
-<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"color":{"field":"chain","type":"nominal"},"opacity":{"value":0.5},"x":{"field":"i","type":"quantitative"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/4.csv","format":{"type":"csv"}}});</script></div>
+<div><script>vegaEmbed(document.currentScript.parentElement, {"encoding":{"y":{"field":"theta","type":"quantitative"},"color":{"field":"chain","type":"nominal"},"opacity":{"value":0.5},"x":{"field":"i","type":"quantitative"}},"usermeta":{"embedOptions":{"renderer":"svg"}},"mark":{"type":"line","tooltip":true},"width":400,"background":"floralwhite","height":300,"data":{"url":"index_files\/4.csv","format":{"type":"csv"}}});</script></div>
 ```
 
 
