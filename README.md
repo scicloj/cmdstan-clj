@@ -4,9 +4,11 @@ cmdstan-clj is a Clojure wrapper of [Stan](https://mc-stan.org/) probabilistic p
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.scicloj/cmdstan-clj.svg)](https://clojars.org/org.scicloj/cmdstan-clj)
 
+If you wish to help in testing and extending this library, we would be glad to chat. It can be a nice opportunity to practice Bayesian Statistics, even if you are not experienced with it yet.
+
 ## Status 
 
-Currently, this is an evolving proof-of-concept.
+Currently, this is an evolving proof-of-concept, still a bit fragile with respect to edge cases and setup.
 
 ## Usage
 
