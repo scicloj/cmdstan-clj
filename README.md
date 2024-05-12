@@ -12,7 +12,7 @@ Currently, this is an evolving proof-of-concept, still a bit fragile with respec
 
 ## Usage
 
-You will need [CmdStan](https://mc-stan.org/users/interfaces/cmdstan.html) installed in your system, and the environment variable `STAN_HOME` pointing to its location.
+You will need [CmdStan](https://mc-stan.org/users/interfaces/cmdstan.html) [installed](https://mc-stan.org/docs/cmdstan-guide/installation.html) in your system, and the environment variable `STAN_HOME` pointing to its location.
 
 Them you can follow the [walkthrough](https://scicloj.github.io/cmdstan-clj).
 
@@ -27,6 +27,12 @@ One way to interoperate with Stan is through the command line CmdStan. It is a c
 [clj-stan](https://github.com/thomasathorne/clj-stan) is great, but only supports an old version of CmdStan.
 
 In the current project, we explore the current version of CmdStan. Possibly, when the details clarify, we may propose merging the new implementation into the existing clj-stan.
+
+## Usage
+
+Implementation details.
+
+Currently, the way cmdstan-clj runs CmdStan is through 
 
 ## License
 
