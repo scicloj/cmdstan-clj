@@ -2,7 +2,7 @@
         com.cnuernber/charred {:mvn/version "1.034"} ; ahead of tech.ml.datasets with a bugfix
         org.scicloj/tempfiles {:mvn/version "1-alpha3"}}
  :aliases {:dev {:extra-paths ["notebooks"]
-                 :extra-deps {org.scicloj/clay {:mvn/version "2-beta7"}
+                 :extra-deps {org.scicloj/clay {:mvn/version "2-beta10"}
                               org.scicloj/noj {:mvn/version "1-alpha34"}
                               scicloj/tablecloth {:mvn/version "7.029.2"}}}
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
