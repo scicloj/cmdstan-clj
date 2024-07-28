@@ -3,7 +3,7 @@
         org.scicloj/tempfiles {:mvn/version "1-alpha3"}
         babashka/process {:mvn/version "0.5.22"}}
  :aliases {:dev {:extra-paths ["notebooks"]
-                 :extra-deps {org.scicloj/clay {:mvn/version "2-beta14"}
+                 :extra-deps {org.scicloj/clay {:mvn/version "2-beta15"}
                               org.scicloj/noj {:mvn/version "1-alpha34"}
                               scicloj/tablecloth {:mvn/version "7.029.2"}}}
            :build {:deps {io.github.clojure/tools.build {:mvn/version "0.9.6"}
