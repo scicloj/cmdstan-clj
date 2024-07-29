@@ -16,13 +16,10 @@
             [clojure.java.io :as io]
             [tech.v3.dataset.print :as print]
             [clojure.string :as str]
-            [scicloj.noj.v1.vis.hanami :as hanami]
-            [scicloj.noj.v1.vis.stats :as vis.stats ]
+            [scicloj.hanamicloth.v1.api :as haclo]
             [aerial.hanami.templates :as ht]
             [scicloj.kindly.v4.kind :as kind]
-            [scicloj.noj.v1.stats :as stats]
             [scicloj.cmdstan-clj.v1.api :as stan]))
-
 
 ;; ## Walkthrough
 
@@ -94,13 +91,14 @@ model {
     (update-vals
      (fn [chain-samples]
        (-> chain-samples
-           (vis.stats/histogram :theta {:nbins 100})))))
+           (haclo/layer-histogram {:=x :theta
+                                   :=histogram-nbins 100})))))
 
 ;; The trace plot of $\theta$:
 
 (-> sampling
     :samples
-    (hanami/plot ht/line-chart {:X :i
-                                :Y :theta
-                                :COLOR "chain"
-                                :OPACITY 0.5}))
+    (haclo/layer-line {:=x :i
+                       :=y :theta
+                       :=color "chain"
+                       :=mark-opacity 0.5}))
