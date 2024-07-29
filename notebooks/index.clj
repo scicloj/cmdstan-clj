@@ -10,16 +10,15 @@
 ;;
 
 (ns index
-  (:require [tablecloth.api :as tc]
-            [clojure.java.shell :as shell]
-            [charred.api :as charred]
-            [clojure.java.io :as io]
-            [tech.v3.dataset.print :as print]
-            [clojure.string :as str]
-            [scicloj.hanamicloth.v1.api :as haclo]
-            [aerial.hanami.templates :as ht]
-            [scicloj.kindly.v4.kind :as kind]
-            [scicloj.cmdstan-clj.v1.api :as stan]))
+  (:require
+   ;; cmdstan-clj API:
+   [scicloj.cmdstan-clj.v1.api :as stan]
+   ;; Tablecloth for table processing
+   [tablecloth.api :as tc]
+   ;; Hanamicloth for data visualization
+   [scicloj.hanamicloth.v1.api :as haclo]
+   ;; Kindly for specifying how to visualize things:
+   [scicloj.kindly.v4.kind :as kind]))
 
 ;; ## Walkthrough
 
