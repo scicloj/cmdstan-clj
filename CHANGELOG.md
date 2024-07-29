@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file. This change
 
 ## [1-alpha2] - unreleased
 - updated deps, added bababashka/process dep
+- improved handling of shell commands
+- checking STAN_HOME environment variable is valid
 
 ## [1-alpha1] - 2024-03-09
 - initial working version

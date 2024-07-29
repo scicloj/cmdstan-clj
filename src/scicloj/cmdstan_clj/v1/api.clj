@@ -3,10 +3,42 @@
             [clojure.java.io :as io]
             [charred.api :as charred]
             [clojure.java.shell :as shell]
+            [babashka.process :as process]
             [tech.v3.dataset :as tmd]
             [clojure.string :as str]))
 
-(def stan-home (System/getenv "STAN_HOME"))
+(defn read-line-from-reader [rdr]
+  (binding [*in* rdr]
+    (read-line)))
+
+(defn verbose-shell [options & cmd-and-args]
+  (let [{:keys [out err]} (->> cmd-and-args
+                               (apply process/process
+                                      (merge options
+                                             {:pre-start-fn #(apply println "Running" (:cmd %))})))]
+    (->> (with-open [out-rdr (io/reader out)
+                     err-rdr (io/reader err)]
+           (loop [all-printed-lines []]
+             (if-let [lines (->> [out-rdr err-rdr]
+                                 (map (fn [rdr]
+                                        (when-let [line (read-line-from-reader rdr)]
+                                          (println line)
+                                          line)))
+                                 (remove nil?)
+                                 seq)]
+               (recur (concat all-printed-lines lines))
+               {:out (->> all-printed-lines
+                          (str/join "\n"))}))))))
+
+(def STAN_HOME (System/getenv "STAN_HOME"))
+
+(when-not STAN_HOME
+  (throw (ex-info "Missing STAN_HOME environment variable."
+                  {})))
+
+(when-not (.exists (io/file STAN_HOME))
+  (throw (ex-info "Missing STAN_HOME directory."
+                  {:STAN_HOME STAN_HOME})))
 
 (def code->stan-path
   (memoize (fn [code]
@@ -18,8 +50,8 @@
   (let [path (-> code
                  code->stan-path
                  (str/replace #"\.stan$" ""))
-        ret (shell/sh "make" path
-                      :dir stan-home)]
+        ret (verbose-shell {:dir STAN_HOME}
+                           "make" path)]
     (assoc ret
            :path path)))
 
@@ -36,7 +68,7 @@
                "output" (str "file=" samples-path)]
          ret (->> args
                   (filter some?)
-                  (apply shell/sh (:path model) "sample"))
+                  (apply verbose-shell {} (:path model) "sample"))
          read-csv (fn [path]
                     (-> path
                         (tmd/->dataset {:key-fn keyword})
