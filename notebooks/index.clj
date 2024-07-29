@@ -22,6 +22,8 @@
 
 ;; ## Walkthrough
 
+;; Here we follow [the introductory example](https://mc-stan.org/docs/cmdstan-guide/example_model_data.html) from Stan' documentation.
+
 ;; Let us define our model.
 ;;
 ;; In our probabilistic model here,
