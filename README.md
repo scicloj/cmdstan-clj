@@ -14,7 +14,7 @@ Currently, this is an evolving proof-of-concept, still a bit fragile with respec
 
 You will need [CmdStan](https://mc-stan.org/users/interfaces/cmdstan.html) [installed](https://mc-stan.org/docs/cmdstan-guide/installation.html) in your system, and the environment variable `STAN_HOME` pointing to its location.
 
-Them you can follow the [walkthrough](https://scicloj.github.io/cmdstan-clj) and [video](https://www.youtube.com/watch?v=1Y89-UlG1FA).
+Them you can follow the 👣 [walkthrough](https://scicloj.github.io/cmdstan-clj) and 🎥 [video](https://www.youtube.com/watch?v=1Y89-UlG1FA).
 
 ## Why
 
