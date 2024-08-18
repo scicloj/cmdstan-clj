@@ -28,10 +28,6 @@ One way to interoperate with Stan is through the command line CmdStan. It is a c
 
 In the current project, we explore the current version of CmdStan. Possibly, when the details clarify, we may propose merging the new implementation into the existing clj-stan.
 
-## Limitations
-
-At the moment, cmdstan-clj's API does not offer a way to keep track of CmdStan's output while it is running through the sampling process. For long-running processes, this is of course important.
-
 ## Implementation details
 
 Currently, cmdstan-clj runs CmdStan through the makefile as [advised by the manual](https://mc-stan.org/docs/cmdstan-guide/compiling_stan_programs.html). In the future, we may consider a more direct apporach as clj-stan [seems to do](https://github.com/thomasathorne/clj-stan/blob/master/src/clj_stan/core.clj). At the moment, the practical difference are not clear to us.
