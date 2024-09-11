@@ -4,7 +4,7 @@
 
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/cmdstan-clj)
 ;;
-;; **Artifact:** [![(Clojars coordinates)](https://img.shields.io/clojars/v/org.scicloj/cmdstan-clj.svg)](https://clojars.org/org.scicloj/cmdsta-nclj)
+;; **Artifact:** [![(Clojars coordinates)](https://img.shields.io/clojars/v/org.scicloj/cmdstan-clj.svg)](https://clojars.org/org.scicloj/cmdstan-clj)
 ;;
 ;; **Status:** an evolving proof-of-concept.
 ;;
