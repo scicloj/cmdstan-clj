@@ -71,7 +71,9 @@ model {
 ;; to control the sampling process.)
 
 (def sampling
-  (stan/sample model data {:num-chains 4}))
+  (stan/sample model data {:num-chains 4
+                           :num-warmup 200
+                           :num-samples 100}))
 
 ;; Here is the output of sampling process.
 
