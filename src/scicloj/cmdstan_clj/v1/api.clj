@@ -46,26 +46,35 @@
                (spit path code)
                path))))
 
-(defn model [code]
-  (let [path (-> code
-                 code->stan-path
-                 (str/replace #"\.stan$" ""))
-        ret (verbose-shell {:dir STAN_HOME}
-                           "make" path)]
-    (assoc ret
-           :path path)))
+(defn model
+  ([code]
+   (model code []))
+  ([code make-args]
+   (let [path (-> code
+                  code->stan-path
+                  (str/replace #"\.stan$" ""))
+         ret (apply verbose-shell
+                    {:dir STAN_HOME}
+                    "make"
+                    (conj make-args path))]
+     (assoc ret
+            :path path))))
 
 (defn sample
   ([model data]
    (sample model data {}))
-  ([model data {:keys [num-chains]}]
+  ([model data {:as options
+                :keys [num-chains]}]
    (let [data-path (:path (tempfiles/tempfile! ".json"))
          samples-path (:path (tempfiles/tempfile! ".csv"))
          _ (charred/write-json data-path data)
-         args [(when num-chains
-                 (str "num_chains=" num-chains))
-               "data" (str "file=" data-path)
-               "output" (str "file=" samples-path)]
+         args (concat (some->> options
+                               (map (fn [[k v]]
+                                      (format "%s=%s"
+                                              (-> k name (str/replace #"-" "_"))
+                                              (str v)))))
+                      ["data" (str "file=" data-path)
+                       "output" (str "file=" samples-path)])
          ret (->> args
                   (filter some?)
                   (apply verbose-shell {} (:path model) "sample"))
