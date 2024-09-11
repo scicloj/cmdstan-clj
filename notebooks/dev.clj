@@ -5,4 +5,5 @@
              :base-source-path "notebooks"
              :source-path "index.clj"
              :base-target-path "docs"
-             :clean-up-target-dir true})
+             :clean-up-target-dir true
+             :title "cmdstan-clj"})
