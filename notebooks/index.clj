@@ -1,4 +1,4 @@
-;; [cmdstan-clj](https://github.com/scicloj/cmdstan-clj) is a Clojure wrapper of [Stan](https://mc-stan.org/) probabilistic programming language that uses the [CmdStan](https://mc-stan.org/users/interfaces/cmdstan) CLI.
+;; [cmdstan-clj](https://github.com/scicloj/cmdstan-clj) is a Clojure wrapper of the [Stan](https://mc-stan.org/) probabilistic programming language that uses the [CmdStan](https://mc-stan.org/users/interfaces/cmdstan) CLI.
 
 ;; **Source:** [![(GitHub repo)](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/scicloj/cmdstan-clj)
 ;;
