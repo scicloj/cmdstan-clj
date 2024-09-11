@@ -15,12 +15,12 @@
             [deps-deploy.deps-deploy :as dd]))
 
 (def lib 'org.scicloj/cmdstan-clj)
-(def version "1-alpha2")
+(def version "1-alpha3")
 (def snapshot (str version "-SNAPSHOT"))
 (def class-dir "target/classes")
 
 (defn test "Run all the tests." [opts]
-  (doseq [alias [:1.10 :1.11 :master]]
+  (doseq [alias [:1.11 :1.12 :master]]
     (println "\nRunning tests for Clojure" (name alias))
     (let [basis    (b/create-basis {:aliases [:test alias]})
           cmds     (b/java-command
