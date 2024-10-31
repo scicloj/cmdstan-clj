@@ -13,8 +13,8 @@
    [scicloj.cmdstan-clj.v1.api :as stan]
    ;; Tablecloth for table processing
    [tablecloth.api :as tc]
-   ;; Hanamicloth for data visualization
-   [scicloj.hanamicloth.v1.api :as haclo]
+   ;; Tableplot for data visualization
+   [scicloj.tableplot.v1.plotly :as plotly]
    ;; Kindly for specifying how to visualize things:
    [scicloj.kindly.v4.kind :as kind]))
 
@@ -92,14 +92,15 @@ model {
     (update-vals
      (fn [chain-samples]
        (-> chain-samples
-           (haclo/layer-histogram {:=x :theta
-                                   :=histogram-nbins 100})))))
+           (plotly/layer-histogram {:=x :theta
+                                    :=histogram-nbins 100})))))
 
 ;; The trace plot of $\theta$:
 
 (-> sampling
     :samples
-    (haclo/layer-line {:=x :i
-                       :=y :theta
-                       :=color "chain"
-                       :=mark-opacity 0.5}))
+    (plotly/layer-line {:=x :i
+                        :=y :theta
+                        :=color :chain
+                        :=color-type :nominal
+                        :=mark-opacity 0.5}))
