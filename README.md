@@ -32,6 +32,11 @@ In the current project, we explore the current version of CmdStan. Possibly, whe
 
 Currently, cmdstan-clj runs CmdStan through the makefile as [advised by the manual](https://mc-stan.org/docs/cmdstan-guide/compiling_stan_programs.html). In the future, we may consider a more direct apporach as clj-stan [seems to do](https://github.com/thomasathorne/clj-stan/blob/master/src/clj_stan/core.clj). At the moment, the practical difference are not clear to us.
 
+## Related projects
+We are also looking to create Clojure bindings for [BridgeStan](https://roualdes.github.io/bridgestan/latest/).
+
+> BridgeStan is a library (with bindings available in Python, Julia, R, and Rust) that grants access to the methods of a Stan model, including log densities, gradients, Hessians, and constraining and unconstraining transforms.
+
 ## License
 
 Copyright © 2024 Scicloj
