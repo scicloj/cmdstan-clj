@@ -16,6 +16,10 @@ You will need [CmdStan](https://mc-stan.org/users/interfaces/cmdstan.html) [inst
 
 Them you can follow the 👣 [walkthrough](https://scicloj.github.io/cmdstan-clj) and 🎥 [video](https://www.youtube.com/watch?v=1Y89-UlG1FA).
 
+## Talk
+
+See Sami Kallinen's 🎥 [talk](https://www.youtube.com/watch?v=ckQllKUw3b4) at Heart of Clojure 2024.
+
 ## Why
 
 Stan is a programming language for Bayesian statistical modelling with wonderful community and ecosystem.
